@@ -261,7 +261,6 @@ export default function Home() {
           <h2>
             Something worth <em>growing?</em>
           </h2>
-          <p className="caps avail">Open to new work from Q3 2026</p>
           <div className="plate-slot contact-letter">
             <PlateImage name="flourish-contact" alt="" />
           </div>
