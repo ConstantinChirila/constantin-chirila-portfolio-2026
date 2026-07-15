@@ -25,7 +25,7 @@ export default function AboutPage() {
           <PlateFrame plateNo="Plate VII">
             <PlateHead
               title="The gardener"
-              latin="Constantinus Chirila · perennial, hardy · british/romanian"
+              latin="Constantin Chirila · perennial, hardy · british/romanian"
             />
             <div className="about-grid">
               <div className="portrait plate-slot">
