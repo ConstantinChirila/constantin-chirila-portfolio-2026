@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#F4EFE0"/>
+  <g fill="none" stroke="#2E4229" stroke-linecap="round" stroke-linejoin="round">
+    <!-- petiole -->
+    <path d="M32 56 C32 52 32 50 32 47" stroke-width="2.4"/>
+    <!-- leaf body: split monstera silhouette -->
+    <path d="M32 8
+             C42 9 51 16 52 27
+             C52.6 33 50 39 45 43
+             C39.5 47.3 35 47 32 47
+             C29 47 24.5 47.3 19 43
+             C14 39 11.4 33 12 27
+             C13 16 22 9 32 8 Z"
+          fill="#2E4229" stroke-width="1.2"/>
+    <!-- midrib and fenestrations, carved in paper colour -->
+    <path d="M32 45 L32 12" stroke="#F4EFE0" stroke-width="1.6"/>
+    <path d="M32 20 L46 22" stroke="#F4EFE0" stroke-width="1.4"/>
+    <path d="M32 20 L18 22" stroke="#F4EFE0" stroke-width="1.4"/>
+    <path d="M32 30 L47 33" stroke="#F4EFE0" stroke-width="1.4"/>
+    <path d="M32 30 L17 33" stroke="#F4EFE0" stroke-width="1.4"/>
+    <path d="M32 39 L43 42" stroke="#F4EFE0" stroke-width="1.4"/>
+    <path d="M32 39 L21 42" stroke="#F4EFE0" stroke-width="1.4"/>
+  </g>
+</svg>

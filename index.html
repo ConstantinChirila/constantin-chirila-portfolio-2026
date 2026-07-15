@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<meta name="supported-color-schemes" content="light">
+<title>Constantin Chirila · Full-stack engineer & product partner</title>
+<meta name="description" content="Constantin Chirila is a UK-based full-stack engineer and product partner helping founders and product managers take software from idea to launch.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme:only light;
+    --paper:#F4EFE0;
+    --paper-deep:#EDE6D2;
+    --ink:#2E4229;          /* deep botanical green */
+    --ink-soft:#5E6E52;
+    --leaf:#4A6B3A;
+    --rule:#C9C2A6;
+    /* the splotches */
+    --rose:#C1607A;
+    --ochre:#C08A2D;
+    --periwinkle:#6F7DAE;
+    --coral:#C75B3F;
+    --display:'Cormorant Garamond',Georgia,serif;
+    --body:'EB Garamond',Georgia,serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;background:#F4EFE0}
+  body{
+    background:#F4EFE0 !important;
+    /* faint laid-paper grain */
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.4 0 0 0 0 0.32 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+    color:var(--ink);
+    font-family:var(--body);
+    font-size:21px;line-height:1.66;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--leaf);color:var(--paper)}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 36px}
+  @media(max-width:640px){.wrap{padding:0 22px}}
+
+  .caps{font-family:var(--body);font-size:14px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft)}
+  .latin{font-family:var(--display);font-style:italic;color:var(--ink-soft)}
+  .mono{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;color:var(--ink-soft)}
+
+  /* ---- watercolour splotch (per-section accent) ---- */
+  .splotch{position:absolute;border-radius:48% 52% 61% 39%/44% 57% 43% 56%;filter:blur(34px);opacity:.28;pointer-events:none}
+
+  /* ---- image plates: drop generated PNGs into ./plates/ ---- */
+  .plate-img{display:block;width:100%;height:auto}
+  .plate-slot{position:relative}
+  .plate-slot.empty{border:1px dashed var(--rule);min-height:220px;display:flex;align-items:center;justify-content:center}
+  .plate-slot.empty::after{content:attr(data-file);font-family:var(--mono);font-size:11px;color:var(--ink-soft);letter-spacing:.06em;padding:12px;text-align:center}
+
+  /* ---- nav ---- */
+  nav{position:sticky;top:0;z-index:50;background:rgba(244,239,224,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .brand{font-family:var(--display);font-size:28px;font-weight:600;letter-spacing:.04em}
+  .brand em{font-style:italic;font-weight:400;color:var(--leaf)}
+  .navlinks{display:flex;gap:36px}
+  .navlinks a{font-size:13.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink);opacity:.7;transition:opacity .2s,color .2s}
+  .navlinks a:hover{opacity:1;color:var(--leaf)}
+  .navcta{font-size:13.5px;letter-spacing:.26em;text-transform:uppercase;border:1px solid var(--ink);padding:12px 22px;transition:background .25s,color .25s}
+  .navcta:hover{background:var(--ink);color:var(--paper)}
+  @media(max-width:900px){.navlinks,.navcta{display:none}}
+
+  /* ---- hero: the title page ---- */
+  .hero{position:relative;padding:70px 0 64px;text-align:center;overflow:hidden}
+  .hero .splotch.s1{width:420px;height:340px;background:var(--rose);top:190px;left:3%}
+  .hero .splotch.s2{width:380px;height:320px;background:var(--ochre);bottom:60px;right:5%}
+  .hero-flora{position:absolute;top:-20px;right:-40px;width:min(46vw,560px);opacity:.95;pointer-events:none}
+  .hero-flora-l{position:absolute;bottom:-30px;left:-50px;width:min(38vw,440px);opacity:.95;pointer-events:none;}
+  .hero-inner{position:relative;z-index:2;max-width:780px;margin:0 auto;padding:40px 40px;background:rgba(244,239,224,.85);box-shadow:0 0 90px 70px rgba(244,239,224,.85);border-radius:32px}
+  @media(max-width:640px){.hero-inner{padding:32px 18px;box-shadow:0 0 60px 40px rgba(244,239,224,.85)}}
+  .hero .est{margin-bottom:22px}
+  .hero .flourish{display:flex;align-items:center;justify-content:center;gap:16px;margin:0 auto 26px;max-width:280px}
+  .hero .flourish .line{flex:1;border-top:1px solid var(--ink)}
+  .hero .flourish svg{flex:none}
+  .hero h1{font-family:var(--display);font-weight:500;font-size:clamp(48px,6.6vw,92px);line-height:1.04;letter-spacing:-.01em}
+  .hero h1 em{font-style:italic;font-weight:400;color:var(--leaf)}
+  .hero .sub{margin:30px auto 0;max-width:50ch;font-size:23px;color:#48513c}
+  .hero .sub b{font-weight:500;color:var(--ink)}
+  .hero .binomial{margin-top:20px}
+  .hero .acts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:40px}
+  .btn{font-family:var(--body);font-size:13.5px;letter-spacing:.26em;text-transform:uppercase;display:inline-flex;align-items:center;gap:12px;padding:15px 28px;border:1px solid var(--ink);transition:all .25s;background:transparent}
+  .btn.solid{background:var(--ink);color:var(--paper)}
+  .btn.solid:hover{background:var(--leaf);border-color:var(--leaf)}
+  .btn.ghost:hover{background:var(--ink);color:var(--paper)}
+  @media(max-width:760px){.hero-flora{opacity:.35}.hero-flora-l{opacity:.35}}
+
+  /* ---- section as botanical plate ---- */
+  section{padding:60px 0;position:relative;overflow:hidden}
+  section + section .wrap::before{content:"";display:block;margin:-92px auto 92px;max-width:1140px}
+  .plate-frame{border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:5px;padding:42px 38px 46px;position:relative;background:rgba(244,239,224,.6)}
+  @media(max-width:640px){.plate-frame{padding:30px 18px 34px}}
+  .plate-no{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);background:var(--paper);padding:3px 24px;font-family:var(--display);font-size:17px;letter-spacing:.4em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;z-index:3}
+  .plate-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin-bottom:36px}
+  .plate-head .head-text{margin:0;max-width:none}
+  .plate-head h2{font-family:var(--display);font-weight:500;font-size:clamp(37px,4.9vw,62px);letter-spacing:0;margin:0 0 6px}
+  .plate-head .latin{font-size:22px}
+  .plate-head .crest{display:flex;align-items:center;justify-content:center;margin:0}
+  .plate-head .crest img{max-height:175px;width:auto;max-width:min(480px,85%)}
+  .plate-head .crest.empty{min-height:80px;width:280px;height:auto}
+  @media(max-width:760px){.plate-head .crest img{max-height:140px;max-width:82vw}}
+
+  /* bearings */
+  #bearings .splotch{width:360px;height:300px;background:var(--periwinkle);top:140px;right:3%}
+  .bearings{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+  .bearing{text-align:center}
+  .bearing .emblem{height:96px;display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+  .bearing h3{font-family:var(--display);font-weight:600;font-size:31px;margin-bottom:10px}
+  .bearing p{font-size:20px;color:#48513c;max-width:34ch;margin:0 auto}
+  .bearing .latin{display:block;font-size:17px;margin-top:12px}
+  @media(max-width:860px){.bearings{grid-template-columns:1fr;gap:52px}}
+
+  /* specimens (work): herbarium sheets */
+  #work .splotch{width:420px;height:360px;background:var(--rose);bottom:80px;left:2%}
+  .specimen{display:grid;grid-template-columns:240px 1fr auto;gap:30px;align-items:center;padding:26px 8px;border-bottom:1px solid var(--rule);transition:background .25s}
+  .specimen:last-of-type{border-bottom:none}
+  .specimen:hover{background:rgba(255,255,255,.35)}
+  .specimen .fig{position:relative}
+  .specimen .fig .cap{text-align:center;margin-top:8px;font-family:var(--display);font-style:italic;font-size:17px;color:var(--ink-soft)}
+  .specimen h3{font-family:var(--display);font-weight:600;font-size:clamp(32px,3.8vw,47px);line-height:1.05}
+  .specimen .habitat{margin-top:6px}
+  .specimen .obs{margin-top:14px;font-size:20px;color:#48513c;max-width:52ch}
+  .specimen .obs .ph{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:2px}
+  .specimen .arw{font-family:var(--display);font-size:30px;color:var(--ink-soft);transition:transform .25s,color .25s}
+  .specimen:hover .arw{transform:translateX(6px);color:var(--leaf)}
+  @media(max-width:860px){.specimen{grid-template-columns:1fr}.specimen .fig{max-width:260px}}
+  .clients{margin-top:40px;padding-top:26px;border-top:1px solid var(--rule);text-align:center}
+  .clients ul{display:flex;gap:12px 34px;flex-wrap:wrap;justify-content:center;margin-top:16px;list-style:none}
+  .clients li{font-family:var(--display);font-style:italic;font-size:24px;color:var(--ink-soft)}
+
+  /* cultivation (process) */
+  #process .splotch{width:380px;height:320px;background:var(--ochre);top:130px;left:3%}
+  .seasons{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+  .season{text-align:center;position:relative}
+  .season .n{font-family:var(--display);font-style:italic;font-size:23px;color:var(--leaf);display:block;margin-bottom:12px}
+  .season h4{font-family:var(--display);font-weight:600;font-size:28px;margin-bottom:8px}
+  .season p{font-size:19px;color:#48513c}
+  @media(max-width:860px){.seasons{grid-template-columns:1fr 1fr;gap:36px 28px}}
+  @media(max-width:520px){.seasons{grid-template-columns:1fr}}
+
+  /* conservatory (tools) */
+  #tools .splotch{width:360px;height:300px;background:var(--coral);bottom:90px;right:3%}
+  .kit{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .tool{border:1px solid var(--rule);padding:26px 24px 30px;background:rgba(255,255,255,.35);text-align:center;transition:border-color .25s,transform .25s}
+  .tool:hover{border-color:var(--ink);transform:translateY(-4px)}
+  .tool .insect{height:64px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .tool .insect img{height:64px;width:auto}
+  .tool .st{font-size:12.5px;letter-spacing:.3em;text-transform:uppercase;display:block;margin-bottom:14px}
+  .tool .st.live{color:var(--leaf)}
+  .tool .st.wip{color:var(--ochre)}
+  .tool .st.plan{color:var(--ink-soft)}
+  .tool h4{font-family:var(--display);font-weight:600;font-size:28px;margin-bottom:8px}
+  .tool p{font-size:19px;color:#48513c}
+  @media(max-width:860px){.kit{grid-template-columns:1fr}}
+
+  /* almanac (notes) */
+  .entry{display:grid;grid-template-columns:110px 1fr auto;gap:22px;align-items:baseline;padding:18px 8px;border-bottom:1px solid var(--rule);transition:padding-left .25s}
+  .entry:last-of-type{border-bottom:none}
+  .entry:hover{padding-left:22px}
+  .entry .d{font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
+  .entry h4{font-family:var(--display);font-weight:500;font-size:clamp(24px,2.7vw,33px)}
+  .entry:hover h4{color:var(--leaf);font-style:italic}
+  .entry .c{font-size:12.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft)}
+  @media(max-width:640px){.entry{grid-template-columns:1fr;gap:6px}}
+
+  /* pressed flowers (testimonials) */
+  #voices .splotch{width:400px;height:340px;background:var(--periwinkle);top:110px;right:3%}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .q{border:1px solid var(--rule);padding:28px 26px;background:rgba(255,255,255,.35);display:flex;flex-direction:column;position:relative}
+  .q::before{content:"❝";font-family:var(--display);font-size:44px;color:var(--leaf);line-height:.6;display:block;margin-bottom:14px}
+  .q p{font-size:20px;line-height:1.6;font-style:italic;color:#42503a;flex:1}
+  .q .by{margin-top:22px;padding-top:16px;border-top:1px solid var(--rule);font-size:15px;color:var(--ink-soft)}
+  .q .by b{display:block;font-family:var(--display);font-style:normal;color:var(--ink);font-weight:600;font-size:18px}
+  @media(max-width:860px){.quotes{grid-template-columns:1fr}}
+
+  /* contact: the calling card */
+  .contact{padding:36px 0 70px;text-align:center;position:relative;overflow:hidden}
+  .contact .splotch.c1{width:380px;height:300px;background:var(--rose);top:30px;left:6%}
+  .contact .splotch.c2{width:340px;height:300px;background:var(--ochre);bottom:50px;right:8%}
+  .contact-flora{margin:0 auto 22px;display:flex;justify-content:center}
+  .contact-flora img{max-height:190px;width:auto;max-width:96vw}
+  .contact h2{font-family:var(--display);font-weight:500;font-size:clamp(46px,6.6vw,84px);line-height:1.05}
+  .contact h2 em{font-style:italic;color:var(--leaf)}
+  .contact .avail{margin:22px 0 20px}
+  .contact-letter{display:flex;align-items:center;justify-content:center;margin:0 auto 30px}
+  .contact-letter img{max-height:170px;width:auto}
+  .contact-letter.empty{min-height:70px;max-width:340px}
+  .contact .acts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+
+  /* the gardener (about) */
+  #about .splotch{width:360px;height:300px;background:var(--ochre);top:130px;left:3%}
+  .about-grid{display:grid;grid-template-columns:320px 1fr;gap:44px;align-items:start}
+  .portrait img{width:100%;height:auto;display:block}
+  .portrait .cap{text-align:center;margin-top:12px;font-family:var(--display);font-style:italic;font-size:17px;color:var(--ink-soft)}
+  .about-text p{font-size:20px;color:#48513c;margin-bottom:20px;max-width:62ch}
+  .about-text p b{font-weight:500;color:var(--ink)}
+  .values{display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin:20px 0}
+  .values div{font-size:17px;color:#48513c;line-height:1.5}
+  .values b{font-family:var(--display);font-style:italic;font-weight:600;font-size:21px;color:var(--ink);display:block;margin-bottom:3px}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;gap:36px}.portrait{max-width:300px;margin:0 auto}.values{grid-template-columns:1fr}}
+
+  footer{border-top:1px solid var(--rule);padding:30px 0}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .fl{display:flex;gap:28px;font-size:12.5px;letter-spacing:.24em;text-transform:uppercase}
+  .fl a{color:var(--ink-soft)}
+  .fl a:hover{color:var(--leaf)}
+  .fc{font-family:var(--display);font-style:italic;font-size:17px;color:var(--ink-soft)}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s ease,transform .8s cubic-bezier(.19,1,.22,1)}
+  .reveal.in{opacity:1;transform:none}
+  :focus-visible{outline:2px solid var(--leaf);outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top">Constantin <em>Chirila</em></a>
+    <div class="navlinks">
+      <a href="#work">Specimens</a>
+      <a href="#process">Method</a>
+      <a href="#tools">Conservatory</a>
+      <a href="#notes">Almanac</a>
+      <a href="#about">About</a>
+    </div>
+    <a href="#contact" class="navcta">Correspond</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <span class="splotch s1"></span><span class="splotch s2"></span>
+  <div class="plate-slot hero-flora" data-file="plates/hero-flora-right.webp">
+    <img class="plate-img" src="plates/hero-flora-right.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+  </div>
+  <div class="plate-slot hero-flora-l" data-file="plates/hero-flora-left.webp">
+    <img class="plate-img" src="plates/hero-flora-left.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+  </div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <p class="caps est">Full-stack engineer · Product partner · Est. 2013</p>
+      <div class="flourish">
+        <span class="line"></span>
+        <svg width="26" height="18" viewBox="0 0 26 18" fill="none"><path d="M13 16 C13 10, 9 6, 3 5 C8 3, 12 6, 13 10 C14 6, 18 3, 23 5 C17 6, 13 10, 13 16 Z" stroke="#2E4229" stroke-width="1.1"/></svg>
+        <span class="line"></span>
+      </div>
+      <h1>Software, carefully <em>cultivated.</em></h1>
+      <p class="sub"><b>I help founders and product managers grow an idea into software that ships.</b> I help shape what to build, then build it myself, end to end: front-end, back-end, and every step between idea and launch.</p>
+      <p class="latin binomial">Faber omnium officiorum · fam. Full-stackaceae · habitat: United Kingdom, remote</p>
+      <div class="acts">
+        <a href="#work" class="btn solid">View specimens</a>
+        <a href="#contact" class="btn ghost">Start a project</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="bearings">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate I</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-disciplines.webp"><img src="plates/flourish-disciplines.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>Three disciplines, one gardener</h2><p class="latin">what most teams split across three hires</p></div>
+      </div>
+      <div class="bearings">
+        <div class="bearing">
+          <div class="emblem plate-slot" data-file="plates/emblem-root.webp"><img class="plate-img" style="height:96px;width:auto" src="plates/emblem-root.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <h3>Full-stack delivery</h3>
+          <p>The whole build in one pair of hands: resilient back-ends, typed APIs, front-ends that feel fast, and the sensible architecture underneath, from first commit to production.</p>
+          <span class="latin">the root system</span>
+        </div>
+        <div class="bearing">
+          <div class="emblem plate-slot" data-file="plates/emblem-stem.webp"><img class="plate-img" style="height:96px;width:auto" src="plates/emblem-stem.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <h3>Product direction</h3>
+          <p>Help deciding what to build, not just how: scoping an MVP that earns its keep, prioritising a roadmap, and being the technical voice in product conversations.</p>
+          <span class="latin">the stem &amp; leaves</span>
+        </div>
+        <div class="bearing">
+          <div class="emblem plate-slot" data-file="plates/emblem-bloom.webp"><img class="plate-img" style="height:96px;width:auto" src="plates/emblem-bloom.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <h3>Design that informs</h3>
+          <p>A design background that sharpens the product: interfaces judged by how they're used, not how they demo. And when it's time to tell the world, I can lend a hand with the marketing pages too.</p>
+          <span class="latin">the bloom, in service of the plant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate II</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-specimens.webp"><img src="plates/flourish-specimens.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>Selected specimens</h2><p class="latin">collected in the field, 2013 to present</p></div>
+      </div>
+
+      <a class="specimen" href="#">
+        <div class="fig">
+          <div class="plate-slot" data-file="plates/specimen-01-monstera.webp"><img class="plate-img" src="plates/specimen-01-monstera.webp" alt="Botanical illustration of a monstera" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <p class="cap">Fig. 1 · Monstera energetica</p>
+        </div>
+        <div>
+          <h3>Bitwatt</h3>
+          <p class="caps habitat">Habitat: Energy · Blockchain</p>
+          <p class="obs"><span class="ph">Placeholder observation</span>Settlement time reduced by 60% after rebuilding the trading pipeline.</p>
+        </div>
+        <span class="arw">→</span>
+      </a>
+
+      <a class="specimen" href="#">
+        <div class="fig">
+          <div class="plate-slot" data-file="plates/specimen-02-palm.webp"><img class="plate-img" src="plates/specimen-02-palm.webp" alt="Botanical illustration of a parlour palm" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <p class="cap">Fig. 2 · Chamaedorea recruitans</p>
+        </div>
+        <div>
+          <h3>Talentvine</h3>
+          <p class="caps habitat">Habitat: Recruitment · SaaS</p>
+          <p class="obs"><span class="ph">Placeholder observation</span>MVP designed, architected and shipped in eight weeks, end to end.</p>
+        </div>
+        <span class="arw">→</span>
+      </a>
+
+      <a class="specimen" href="#">
+        <div class="fig">
+          <div class="plate-slot" data-file="plates/specimen-03-strelitzia.webp"><img class="plate-img" src="plates/specimen-03-strelitzia.webp" alt="Botanical illustration of a bird of paradise" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <p class="cap">Fig. 3 · Strelitzia commercialis</p>
+        </div>
+        <div>
+          <h3>iFootage Gear</h3>
+          <p class="caps habitat">Habitat: E-commerce · Product</p>
+          <p class="obs"><span class="ph">Placeholder observation</span>Checkout conversion up 32% after a ground-up storefront rebuild.</p>
+        </div>
+        <span class="arw">→</span>
+      </a>
+
+      <a class="specimen" href="#">
+        <div class="fig">
+          <div class="plate-slot" data-file="plates/specimen-04-banana.webp"><img class="plate-img" src="plates/specimen-04-banana.webp" alt="Botanical illustration of a young banana plant" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <p class="cap">Fig. 4 · Musa referens</p>
+        </div>
+        <div>
+          <h3>Mention Me</h3>
+          <p class="caps habitat">Habitat: Referral · Platform</p>
+          <p class="obs"><span class="ph">Placeholder observation</span>Client-facing platform scaled past three million end users.</p>
+        </div>
+        <span class="arw">→</span>
+      </a>
+
+      <div class="clients">
+        <span class="caps">Gardens I've tended along the way</span>
+        <ul>
+          <li>Mention Me</li><li>Debenhams</li><li>OVO Energy</li><li>Belstaff</li><li>Evans Cycles</li><li>Biscuiteers</li><li>University of Worcester</li><li>Workvine</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate III</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-method.webp"><img src="plates/flourish-method.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>The method</h2><p class="latin">how an engagement is grown, in four seasons</p></div>
+      </div>
+      <div class="seasons">
+        <div class="season"><span class="n">i. prepare the ground</span><h4>Frame</h4><p>Pin down the real problem, the constraints, and what success looks like, before anything is planted.</p></div>
+        <div class="season"><span class="n">ii. plant</span><h4>Shape</h4><p>Scope the MVP and choose the stack together. Every decision written down, nothing a black box.</p></div>
+        <div class="season"><span class="n">iii. tend</span><h4>Build</h4><p>Full-stack delivery in tight loops. Working software in your hands early and often.</p></div>
+        <div class="season"><span class="n">iv. harvest</span><h4>Launch</h4><p>Shipped, launched, yours: a codebase your team can own outright, or I stay on to grow it.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate IV</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-conservatory.webp"><img src="plates/flourish-conservatory.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>The conservatory</h2><p class="latin">small instruments, built for my own work &amp; freely shared</p></div>
+      </div>
+      <div class="kit">
+        <div class="tool">
+          <div class="insect plate-slot" data-file="plates/insect-hummingbird.webp"><img src="plates/insect-hummingbird.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <span class="st live">In bloom</span>
+          <h4>Playlist Exporter</h4>
+          <p>Export any Spotify playlist to a spreadsheet with ready-made YouTube search links. No migration middleman.</p>
+        </div>
+        <div class="tool">
+          <div class="insect plate-slot" data-file="plates/insect-morpho.webp"><img src="plates/insect-morpho.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <span class="st wip">Budding</span>
+          <h4>Wire Protocol Tester</h4>
+          <p>Inspect and replay peer-to-peer transfers over local Wi-Fi. The debugging tool I wanted while building offline sync.</p>
+        </div>
+        <div class="tool">
+          <div class="insect plate-slot" data-file="plates/insect-beetle.webp"><img src="plates/insect-beetle.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+          <span class="st plan">Seed</span>
+          <h4>Grid Composer</h4>
+          <p>Generate and export layout grids as CSS or design tokens. A small utility that keeps my builds consistent.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="notes">
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate V</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-almanac.webp"><img src="plates/flourish-almanac.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>The almanac</h2><p class="latin">field notes &amp; observations</p></div>
+      </div>
+      <a class="entry" href="#"><span class="d">2026 · 06</span><h4>The one-person full-stack: when a single hire beats a team of three</h4><span class="c">Practice</span></a>
+      <a class="entry" href="#"><span class="d">2026 · 05</span><h4>Designing a wire protocol for offline peer-to-peer transfer</h4><span class="c">Engineering</span></a>
+      <a class="entry" href="#"><span class="d">2026 · 04</span><h4>Running a local AI asset pipeline on a single GPU</h4><span class="c">Experiments</span></a>
+    </div>
+  </div>
+</section>
+
+<section id="voices">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate VI</span>
+      <div class="plate-head">
+        <div class="crest plate-slot" data-file="plates/flourish-voices.webp"><img src="plates/flourish-voices.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')"></div>
+        <div class="head-text"><h2>Pressed &amp; kept</h2><p class="latin">kind words from people I've worked with</p></div>
+      </div>
+      <div class="quotes">
+        <div class="q">
+          <p>At Mention Me we worked with Constantin for a few years and were constantly impressed both by the quality and promptness of his output. He was always willing to go out of his way to make sure we (and our clients) got a great finished product.</p>
+          <div class="by"><b>Simon Dring</b>Head of Client Success · Mention Me</div>
+        </div>
+        <div class="q">
+          <p>Having worked with Constantin for a few years, we can safely say that we are impressed and satisfied; he is thorough and knowledgeable and he always had our company's interests in mind when delivering.</p>
+          <div class="by"><b>Madison Lee</b>Regional Business Development Manager · iFootage Gear</div>
+        </div>
+        <div class="q">
+          <p>Constantin was a real pleasure to work with and we look forward to working with him again. He's definitely the kind of professional you can trust with a project from start to finish.</p>
+          <div class="by"><b>David Hobbs</b>Software Development Director · Workvine</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <span class="splotch c1"></span><span class="splotch c2"></span>
+  <div class="wrap reveal">
+    <div class="plate-slot contact-flora" data-file="plates/contact-garland.webp">
+      <img class="plate-img" src="plates/contact-garland.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+    </div>
+    <h2>Something worth <em>growing?</em></h2>
+    <p class="caps avail">Taking on select engagements from Q3 2026</p>
+    <div class="plate-slot contact-letter" data-file="plates/flourish-contact.webp">
+      <img src="plates/flourish-contact.webp" alt="" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+    </div>
+    <div class="acts">
+      <a href="mailto:hello@constantinchirila.com" class="btn solid">hello@constantinchirila.com</a>
+      <a href="#" class="btn ghost">Book a call</a>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <span class="splotch"></span>
+  <div class="wrap">
+    <div class="plate-frame reveal">
+      <span class="plate-no">Plate VII</span>
+      <div class="plate-head solo"><div class="head-text"><h2>The gardener</h2><p class="latin">Constantinus chirila · perennial, hardy · native to Romania, naturalised in Britain</p></div></div>
+      <div class="about-grid">
+        <div class="portrait plate-slot" data-file="plates/portrait.webp">
+          <img src="plates/portrait.webp" alt="Engraved portrait of Constantin Chirila" onerror="this.style.display='none';this.parentElement.classList.add('empty')">
+          <p class="cap">The author, observed from life</p>
+        </div>
+        <div class="about-text">
+          <p><b>I'm Constantin, a Romanian-born British full-stack engineer with a product head.</b> I started on the design side of the craft over a decade ago, crossed into engineering, and have been building products for clients since 2013: first the interfaces, then the systems behind them, and now the whole thing end to end.</p>
+          <p>These days I work with founders and product managers who need one accountable partner from idea to launch: shaping the product, building the front-end and back-end, shipping it, and even helping with the marketing when it's time to tell people. What's left behind is a codebase your team can inherit without me in the room.</p>
+          <div class="values">
+            <div><b>Clarity over cleverness</b>Code and decisions a future team can read cold.</div>
+            <div><b>Own it end to end</b>From the first sketch to the thing running in production.</div>
+            <div><b>Write it down</b>Every trade-off documented; nothing lives only in my head.</div>
+            <div><b>Grow it to last</b>Foundations before flourishes, so the software is still standing in five years.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fl">
+      <a href="https://github.com/ConstantinChirila">GitHub</a>
+      <a href="https://www.linkedin.com/in/constantinchirila/">LinkedIn</a>
+      <a href="https://twitter.com/ConstantinC">Twitter</a>
+      <a href="mailto:hello@constantinchirila.com">Email</a>
+    </div>
+    <div class="fc">© 2013–2026 Constantin Chirila · rooted in Romania, grown in Britain</div>
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

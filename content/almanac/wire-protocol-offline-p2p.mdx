@@ -1,0 +1,31 @@
+---
+title: "Designing a wire protocol for offline peer-to-peer transfer"
+date: "2026 · 05"
+sort: "2026-05"
+category: "Engineering"
+excerpt: "Two devices, one local network, no server in the middle. Notes on framing, versioning, and making a byte stream that a future me can still read."
+draft: true
+---
+
+When two devices talk directly over local Wi-Fi, with no server to referee, the
+protocol is the contract. Get it right and transfers just work. Get it wrong and
+you are debugging raw bytes at midnight, which is exactly the situation that led
+me to build a small tester for it.
+
+## What the protocol has to earn
+
+- **Framing.** Where does one message end and the next begin? Length-prefixed
+  frames beat delimiters the moment your payload can contain the delimiter.
+- **Versioning from day one.** The first byte that says "this is version N" is
+  the cheapest insurance you will ever buy. Old peers should refuse politely,
+  not corrupt.
+- **Backpressure.** A fast sender and a slow receiver need a way to agree on
+  pace, or memory quietly fills until something falls over.
+
+## Readable on purpose
+
+A protocol is documentation that runs. I write the frame layout down before I
+write the encoder, and I keep a reference dump of a known-good exchange. Months
+later, that dump is worth more than any comment.
+
+_Draft. Full field note to follow._

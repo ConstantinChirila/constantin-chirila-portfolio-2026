@@ -1,0 +1,39 @@
+---
+title: "Running a local AI asset pipeline on a single GPU"
+date: "2026 · 04"
+sort: "2026-04"
+category: "Experiments"
+excerpt: "Generating and cutting out the botanical plates for this very site, on one consumer GPU. A note on prompts, keying, and knowing when to stop."
+draft: true
+---
+
+The illustrations across this folio were grown on a single consumer GPU. No
+cloud queue, no per-image bill, just a repeatable pipeline sitting on my own
+machine. Here is roughly how the plates came to be.
+
+## Generate to a known background
+
+Every prompt ends with the same instruction: a flat, plain, solid cream
+background at exactly the page colour. Consistency at the generation step makes
+everything downstream easier. Even so, I never trust the background to match. I
+always cut it out.
+
+## Cut out, do not colour-key blindly
+
+The keying step is where naive pipelines ruin good art. Mine samples the border
+colour, builds a colour-distance mask, then keeps only the regions that connect
+to the image border. That last part is the trick: it protects a cream envelope
+or a pale petal in the middle of the subject from being erased along with the
+background.
+
+- Alpha ramp with a gentle gamma, so edges feather instead of jagging.
+- Crop to the alpha bounding box with a small pad.
+- Resize, then WebP at a high quality.
+
+## Knowing when to stop
+
+The hardest part is not the tooling. It is resisting the urge to regenerate one
+more time. At some point the plate is good enough to press, and the folio wants
+finishing more than it wants a marginally better leaf.
+
+_Draft. Full field note to follow._
