@@ -124,5 +124,5 @@ export const skills = {
     "TDD / Unit / E2E",
     "Cypress / Playwright / Jest",
   ],
-  knowledgeable: ["Python", "Kubernetes", "GraphQL", "C# ASP.NET"],
+  knowledgeable: ["Python", "Go", "Kubernetes", "GraphQL", "C# ASP.NET"],
 };
