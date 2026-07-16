@@ -256,14 +256,6 @@ export default function Home() {
         <Splotch colour="rose" className="c1" />
         <Splotch colour="ochre" className="c2" />
         <Reveal className="wrap">
-          <div className="plate-slot contact-flora">
-            <PlateImage
-              name="contact-garland"
-              alt=""
-              className="plate-img"
-              sizes="(max-width: 640px) 96vw, 640px"
-            />
-          </div>
           <h2>
             Something worth <em>growing?</em>
           </h2>
