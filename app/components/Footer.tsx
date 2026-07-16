@@ -17,9 +17,7 @@ export default function Footer() {
           </a>
           <EmailLink>Email</EmailLink>
         </div>
-        <div className="fc">
-          © 2013–2026 Constantin Chirila · rooted in Romania, grown in Britain
-        </div>
+        <div className="fc">© 2013–2026 Constantin Chirila</div>
       </div>
     </footer>
   );
