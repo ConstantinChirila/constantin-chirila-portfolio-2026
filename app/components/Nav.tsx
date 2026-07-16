@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { nav } from "@/app/data/content";
 import EmailLink from "./EmailLink";
+import MobileMenu from "./MobileMenu";
 
 export default function Nav() {
   return (
@@ -22,20 +23,8 @@ export default function Nav() {
           {nav.cta.label}
         </EmailLink>
 
-        {/* Mobile menu: a native disclosure so it works without JS */}
-        <details className="mobilemenu">
-          <summary aria-label="Toggle menu">
-            <span className="bars" aria-hidden="true" />
-          </summary>
-          <div className="mobilemenu-panel">
-            {nav.links.map((link) => (
-              <Link key={link.href} href={`/${link.href}`}>
-                {link.label}
-              </Link>
-            ))}
-            <EmailLink subject="Hello">{nav.cta.label}</EmailLink>
-          </div>
-        </details>
+        {/* Mobile menu: native disclosure that closes on navigation */}
+        <MobileMenu />
       </div>
     </nav>
   );
