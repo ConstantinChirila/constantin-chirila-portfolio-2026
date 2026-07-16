@@ -1,6 +1,5 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import Nav from "./components/Nav";
-import Footer from "./components/Footer";
 import PlateFrame from "./components/PlateFrame";
 import PlateHead from "./components/PlateHead";
 import PlateImage from "./components/PlateImage";
@@ -15,11 +14,13 @@ import EmailLink from "./components/EmailLink";
 //   (and add `tools` back to the content import below for the conservatory)
 import { clients, disciplines, seasons, testimonials } from "./data/content";
 
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default function Home() {
   return (
     <>
-      <Nav />
-
       {/* ---- Hero: the title page ---- */}
       <header className="hero" id="top">
         <Splotch colour="rose" className="s1" />
@@ -104,7 +105,7 @@ export default function Home() {
               {disciplines.map((d) => (
                 <div className="bearing" key={d.title}>
                   <div className="emblem plate-slot">
-                    <PlateImage name={d.emblem} alt="" />
+                    <PlateImage name={d.emblem} alt="" sizes="96px" />
                   </div>
                   <h3>{d.title}</h3>
                   <p>{d.body}</p>
@@ -256,21 +257,28 @@ export default function Home() {
         <Splotch colour="ochre" className="c2" />
         <Reveal className="wrap">
           <div className="plate-slot contact-flora">
-            <PlateImage name="contact-garland" alt="" className="plate-img" />
+            <PlateImage
+              name="contact-garland"
+              alt=""
+              className="plate-img"
+              sizes="(max-width: 640px) 96vw, 640px"
+            />
           </div>
           <h2>
             Something worth <em>growing?</em>
           </h2>
           <div className="plate-slot contact-letter">
-            <PlateImage name="flourish-contact" alt="" />
+            <PlateImage
+              name="flourish-contact"
+              alt=""
+              sizes="(max-width: 640px) 80vw, 320px"
+            />
           </div>
           <div className="acts">
             <EmailLink className="btn solid" showAddress />
           </div>
         </Reveal>
       </section>
-
-      <Footer />
     </>
   );
 }

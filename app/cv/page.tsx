@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Nav from "@/app/components/Nav";
-import Footer from "@/app/components/Footer";
 import PlateFrame from "@/app/components/PlateFrame";
 import PlateImage from "@/app/components/PlateImage";
 import Splotch from "@/app/components/Splotch";
@@ -14,22 +12,27 @@ import {
 } from "@/app/data/cv";
 
 export const metadata: Metadata = {
-  title: "Curriculum Vitae · Constantin Chirila",
+  title: "Curriculum Vitae",
   description:
     "The full record: ten years of experience, education, and the tools Constantin Chirila works with.",
+  alternates: { canonical: "/cv" },
 };
 
 export default function CvPage() {
   return (
     <>
-      <Nav />
       <section id="cv">
         <Splotch colour="periwinkle" />
         <div className="wrap">
           <PlateFrame plateNo="Curriculum Vitae">
             <div className="case-head">
               <div className="crest wide">
-                <PlateImage name="cv-flourish" alt="" priority />
+                <PlateImage
+                  name="cv-flourish"
+                  alt=""
+                  priority
+                  sizes="(max-width: 640px) 94vw, 600px"
+                />
               </div>
               <h1>Curriculum Vitae</h1>
               <p className="cap">{cvMeta}</p>
@@ -53,7 +56,7 @@ export default function CvPage() {
               {experience.map((role) => (
                 <div className="cv-role" key={`${role.org}-${role.period}`}>
                   <div className="marker" aria-hidden="true">
-                    <PlateImage name={role.plate} alt="" />
+                    <PlateImage name={role.plate} alt="" sizes="100px" />
                   </div>
                   <div>
                     <h3>{role.title}</h3>
@@ -114,7 +117,6 @@ export default function CvPage() {
           </PlateFrame>
         </div>
       </section>
-      <Footer />
     </>
   );
 }

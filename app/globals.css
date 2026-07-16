@@ -58,6 +58,24 @@ nav .wrap { display: flex; align-items: center; justify-content: space-between; 
 .navcta:hover { background: var(--ink); color: var(--paper); }
 @media (max-width: 900px) { .navlinks, .navcta { display: none; } }
 
+/* skip-to-content link (visible on focus) */
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; background: var(--ink); color: var(--paper); padding: 10px 18px; font-family: var(--body); font-size: 13.5px; letter-spacing: .2em; text-transform: uppercase; }
+.skip-link:focus { left: 8px; top: 8px; }
+
+/* mobile disclosure menu (native <details>, works without JS) */
+.mobilemenu { display: none; position: relative; }
+.mobilemenu > summary { list-style: none; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+.mobilemenu > summary::-webkit-details-marker { display: none; }
+.mobilemenu .bars, .mobilemenu .bars::before, .mobilemenu .bars::after { display: block; width: 24px; height: 2px; background: var(--ink); }
+.mobilemenu .bars { position: relative; }
+.mobilemenu .bars::before, .mobilemenu .bars::after { content: ""; position: absolute; left: 0; }
+.mobilemenu .bars::before { top: -7px; }
+.mobilemenu .bars::after { top: 7px; }
+.mobilemenu-panel { position: absolute; right: 0; top: 48px; background: var(--paper); border: 1px solid var(--rule); display: flex; flex-direction: column; padding: 10px 18px; min-width: 200px; box-shadow: 0 12px 30px rgba(46, 66, 41, .14); }
+.mobilemenu-panel a { padding: 11px 2px; font-size: 13.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--ink); }
+.mobilemenu-panel a:hover { color: var(--leaf); }
+@media (max-width: 900px) { .mobilemenu { display: block; } }
+
 /* ---- hero: the title page ---- */
 .hero { position: relative; padding: 70px 0 64px; text-align: center; overflow: hidden; }
 .hero .splotch.s1 { width: 420px; height: 340px; background: var(--rose); top: 190px; left: 3%; }

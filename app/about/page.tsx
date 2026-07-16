@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Nav from "@/app/components/Nav";
-import Footer from "@/app/components/Footer";
 import PlateFrame from "@/app/components/PlateFrame";
 import PlateHead from "@/app/components/PlateHead";
 import PlateImage from "@/app/components/PlateImage";
@@ -10,15 +8,15 @@ import ValueGrid from "@/app/components/ValueGrid";
 import { values } from "@/app/data/content";
 
 export const metadata: Metadata = {
-  title: "About · Constantin Chirila",
+  title: "About",
   description:
-    "Constantin Chirila is a Romanian-born British full-stack engineer with a product mindset, building software for founders and product managers from idea to launch.",
+    "Constantin Chirila is a Romanian-born British front-end engineer with a designer's background, building interfaces for the web in React and TypeScript, and the backend when a project needs it.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
     <>
-      <Nav />
       <section id="about">
         <Splotch colour="ochre" />
         <div className="wrap">
@@ -67,7 +65,6 @@ export default function AboutPage() {
           </PlateFrame>
         </div>
       </section>
-      <Footer />
     </>
   );
 }

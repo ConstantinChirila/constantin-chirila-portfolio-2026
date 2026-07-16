@@ -1,21 +1,29 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import Nav from "@/app/components/Nav";
-import Footer from "@/app/components/Footer";
 import PlateFrame from "@/app/components/PlateFrame";
 import PlateImage from "@/app/components/PlateImage";
 import Splotch from "@/app/components/Splotch";
 
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false, follow: false },
+};
+
 export default function NotFound() {
   return (
     <>
-      <Nav />
       <section id="notfound">
         <Splotch colour="coral" />
         <div className="wrap">
           <PlateFrame plateNo="Plate ∅">
             <div className="case-head">
               <div className="crest">
-                <PlateImage name="specimen-03-strelitzia" alt="" priority />
+                <PlateImage
+                  name="specimen-03-strelitzia"
+                  alt=""
+                  priority
+                  sizes="(max-width: 640px) 80vw, 360px"
+                />
               </div>
               <h1>Lost in the undergrowth</h1>
               <p className="cap">
@@ -37,7 +45,6 @@ export default function NotFound() {
           </PlateFrame>
         </div>
       </section>
-      <Footer />
     </>
   );
 }

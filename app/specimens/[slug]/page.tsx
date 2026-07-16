@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Nav from "@/app/components/Nav";
-import Footer from "@/app/components/Footer";
 import PlateFrame from "@/app/components/PlateFrame";
 import PlateImage from "@/app/components/PlateImage";
 import Splotch from "@/app/components/Splotch";
 import { getSpecimen, specimens } from "@/app/data/specimens";
-import { social } from "@/app/data/content";
+import { plate } from "@/app/lib/plates";
+
+// Lock the route to slugs produced at build time; unknown slugs 404 instead of
+// being rendered on demand.
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return specimens.map((s) => ({ slug: s.slug }));
@@ -20,17 +22,21 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const specimen = getSpecimen(slug);
-  if (!specimen) return { title: "Specimen not found · Constantin Chirila" };
+  if (!specimen) return { title: "Specimen not found" };
 
-  const title = `${specimen.name} · ${specimen.habitat} · Constantin Chirila`;
+  const title = `${specimen.name} · ${specimen.habitat}`;
   const description = specimen.caseStudy.problem;
   return {
     title,
     description,
+    alternates: { canonical: `/specimens/${specimen.slug}` },
+    // Placeholder case studies (unlinked, metrics not final): keep them out of
+    // the index until the copy is ready. Drop this to publish + add to sitemap.
+    robots: { index: false, follow: true },
     openGraph: {
       title,
       description,
-      images: [{ url: `/plates/${specimen.plate}.webp` }],
+      images: [{ url: plate(specimen.plate).src }],
     },
   };
 }
@@ -48,7 +54,6 @@ export default async function SpecimenPage({
 
   return (
     <>
-      <Nav />
       <section id="specimen">
         <Splotch colour="rose" />
         <div className="wrap">
@@ -59,7 +64,11 @@ export default async function SpecimenPage({
 
             <div className="case-head">
               <div className="crest">
-                <PlateImage name={specimen.plate} alt={specimen.alt} />
+                <PlateImage
+                  name={specimen.plate}
+                  alt={specimen.alt}
+                  sizes="(max-width: 640px) 80vw, 360px"
+                />
               </div>
               <h1>{specimen.name}</h1>
               <p className="cap">
@@ -88,7 +97,6 @@ export default async function SpecimenPage({
           </PlateFrame>
         </div>
       </section>
-      <Footer />
     </>
   );
 }

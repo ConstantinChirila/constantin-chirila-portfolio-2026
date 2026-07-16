@@ -42,22 +42,42 @@ export default function EmailLink({
   const mailto = (address: string) =>
     `mailto:${address}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`;
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!email) {
-      e.preventDefault();
-      const address = decode();
-      if (address) window.location.href = mailto(address);
-    }
+  // The address is only ever assembled in JS. Until it is (SSR / pre-hydration),
+  // render a focusable button rather than an href-less or href="#" anchor, so
+  // the control is keyboard-operable and never scroll-jumps to the top.
+  const go = () => {
+    const address = email ?? decode();
+    if (address) window.location.href = mailto(address);
   };
 
+  const label = showAddress ? (email ?? fallback) : (children ?? fallback);
+
+  if (!email) {
+    return (
+      <a
+        className={className}
+        role="button"
+        tabIndex={0}
+        rel="nofollow"
+        onClick={(e) => {
+          e.preventDefault();
+          go();
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            go();
+          }
+        }}
+      >
+        {label}
+      </a>
+    );
+  }
+
   return (
-    <a
-      className={className}
-      href={email ? mailto(email) : undefined}
-      onClick={handleClick}
-      rel="nofollow"
-    >
-      {showAddress ? (email ?? fallback) : (children ?? fallback)}
+    <a className={className} href={mailto(email)} rel="nofollow">
+      {label}
     </a>
   );
 }
