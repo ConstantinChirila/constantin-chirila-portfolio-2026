@@ -173,7 +173,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---- Plate IV: the conservatory — hidden until the tools are ready to show. Uncomment to restore. ----
+      {/* ---- Plate IV: the conservatory, hidden until the tools are ready to show. Uncomment to restore. ----
       <section id="tools">
         <Splotch colour="coral" />
         <div className="wrap">
@@ -200,7 +200,7 @@ export default function Home() {
       </section>
       */}
 
-      {/* ---- Plate V: the almanac — hidden until there are articles ready. Uncomment to restore (and re-add the getAllPosts import + notes const above). ----
+      {/* ---- Plate V: the almanac, hidden until there are articles ready. Uncomment to restore (and re-add the getAllPosts import + notes const above). ----
       <section id="notes">
         <div className="wrap">
           <PlateFrame plateNo="Plate V">

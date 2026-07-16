@@ -128,7 +128,7 @@ export const testimonials: Testimonial[] = [
     role: "Regional Business Development Manager · iFootage Gear",
   },
   {
-    // NOTE: original quote said "designer", softened to "professional" — confirm with David Hobbs.
+    // NOTE: original quote said "designer", softened to "professional", confirm with David Hobbs.
     quote:
       "Constantin was a real pleasure to work with and we look forward to working with him again. He's definitely the kind of professional you can trust with a project from start to finish.",
     name: "David Hobbs",

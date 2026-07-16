@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   description: siteDescription,
   // Canonical is set per-page (see each page's metadata) so routes without one
-  // — e.g. the 404 — don't inherit a wrong canonical from the layout.
+  // (e.g. the 404) don't inherit a wrong canonical from the layout.
   openGraph: {
     type: "website",
     title: siteTitle,
