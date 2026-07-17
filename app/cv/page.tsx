@@ -7,14 +7,13 @@ import {
   cvProfile,
   education,
   experience,
-  previousRoles,
-  skills,
+  skillGroups,
 } from "@/app/data/cv";
 
 export const metadata: Metadata = {
   title: "Curriculum Vitae",
   description:
-    "The full record: ten years of experience, education, and the tools Constantin Chirila works with.",
+    "The full record: a decade-plus of experience, education, and the tools Constantin Chirila works with.",
   alternates: { canonical: "/cv" },
 };
 
@@ -62,22 +61,18 @@ export default function CvPage() {
                     <h3>{role.title}</h3>
                     <p className="org">{role.org}</p>
                     <p className="when">{role.period}</p>
-                    <p>{role.body}</p>
+                    {role.body && <p className="role-body">{role.body}</p>}
+                    {role.bullets && (
+                      <ul className="role-bullets">
+                        {role.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* Previous roles */}
-            <h2 className="cv-h2">Earlier chapters</h2>
-            <ul className="cv-prev">
-              {previousRoles.map((role) => (
-                <li key={`${role.org}-${role.period}`}>
-                  <b>{role.title}</b> at {role.org}{" "}
-                  <span className="when">{role.period}</span>
-                </li>
-              ))}
-            </ul>
 
             {/* Education */}
             <h2 className="cv-h2">Education</h2>
@@ -94,26 +89,18 @@ export default function CvPage() {
 
             {/* Skills & tools */}
             <h2 className="cv-h2">Skills &amp; tools</h2>
-            <div className="chips-group">
-              <span className="caps">Strong</span>
-              <div className="chips">
-                {skills.strong.map((s) => (
-                  <span className="chip" key={s}>
-                    {s}
-                  </span>
-                ))}
+            {skillGroups.map((group) => (
+              <div className="chips-group" key={group.label}>
+                <span className="caps">{group.label}</span>
+                <div className="chips">
+                  {group.items.map((s) => (
+                    <span className="chip" key={s}>
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="chips-group">
-              <span className="caps">Knowledgeable</span>
-              <div className="chips">
-                {skills.knowledgeable.map((s) => (
-                  <span className="chip soft" key={s}>
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
+            ))}
           </PlateFrame>
         </div>
       </section>

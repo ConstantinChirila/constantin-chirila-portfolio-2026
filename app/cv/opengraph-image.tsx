@@ -6,10 +6,10 @@ export const contentType = OG_CONTENT_TYPE;
 
 export default function OpengraphImage() {
   return renderOgImage({
-    eyebrow: "Front-end engineer & UX · Birmingham, UK",
+    eyebrow: "Senior front-end engineer · Design-led · Birmingham, UK",
     titleLead: "Curriculum",
     titleAccent: "Vitae.",
     subtitle:
-      "Ten years building for the web: experience, education, and the tools I work with.",
+      "10+ years building for the web: experience, education, and the tools I work with.",
   });
 }

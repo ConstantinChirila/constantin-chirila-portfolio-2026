@@ -1213,11 +1213,32 @@ footer .wrap {
   color: var(--ink-soft);
   margin: 9px 0 12px;
 }
-.cv-role p:last-child {
+.cv-role .role-body {
   font-size: 20px;
   line-height: 1.55;
   color: #48513c;
-  max-width: 62ch;
+  max-width: 64ch;
+}
+.cv-role .role-bullets {
+  margin: 12px 0 0;
+  padding-left: 1.2em;
+  list-style: none;
+  max-width: 64ch;
+}
+.cv-role .role-bullets li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #48513c;
+  margin-bottom: 9px;
+}
+.cv-role .role-bullets li::before {
+  content: "\273F";
+  position: absolute;
+  left: 0;
+  color: var(--leaf);
+  font-size: 15px;
 }
 @media (max-width: 640px) {
   .cv-role {
