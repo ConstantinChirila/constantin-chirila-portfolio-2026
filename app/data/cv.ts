@@ -4,7 +4,7 @@ export const cvProfile =
   "Senior software engineer with 10+ years building production web applications, focused on React and TypeScript at scale. Founding-team experience taking developer-tools products from MVP to flagship. I design maintainable, scalable front-end architecture and can own delivery end to end, from data layer to interface, using AI-assisted workflows to move quickly without sacrificing code quality. A prior decade in design and UX means I bridge product, design, and engineering rather than just consuming specs.";
 
 export const cvMeta =
-  "Senior front-end engineer · Design-led, full-stack capable · Birmingham, UK";
+  "Senior front-end engineer · Design-led, backend capable · Birmingham, UK";
 
 export interface Role {
   title: string;
