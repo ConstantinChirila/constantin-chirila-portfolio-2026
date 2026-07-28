@@ -7,7 +7,7 @@ export const nav = {
     { label: "About", href: "/about" },
   ],
   cvCta: { label: "CV", href: "/cv" },
-  cta: { label: "Correspond →", href: "#contact" },
+  cta: { label: "Email me", href: "#contact" },
 };
 
 export const hero = {
