@@ -12,7 +12,7 @@ export const nav = {
 
 export const hero = {
   eyebrow: "Front-end engineer · Design & UX · Est. 2013",
-  title: "Software, engineered to spec.",
+  title: "From idea to shipped.",
   intro:
     "I'm a front-end engineer with a designer's eye. I build fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it. Design is where I started, so I care how the whole thing feels, not just how it works.",
   plateLabel: "3 disciplines → 1 build",
