@@ -282,7 +282,6 @@ svg {
   text-transform: uppercase;
   font-weight: 500;
   padding: 9px 16px 8px;
-  border-radius: 999px;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -301,7 +300,6 @@ svg {
   text-transform: uppercase;
   font-weight: 500;
   padding: 8px 16px 7px;
-  border-radius: 999px;
   white-space: nowrap;
 }
 
