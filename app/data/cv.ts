@@ -1,5 +1,3 @@
-import type { PlateName } from "@/app/lib/plates";
-
 export const cvProfile =
   "Senior software engineer with 10+ years building production web applications, focused on React and TypeScript at scale. Founding-team experience taking developer-tools products from MVP to flagship. I design maintainable, scalable front-end architecture and can own delivery end to end, from data layer to interface, using AI-assisted workflows to move quickly without sacrificing code quality. A prior decade in design and UX means I bridge product, design, and engineering rather than just consuming specs.";
 
@@ -14,8 +12,6 @@ export interface Role {
   body?: string;
   /** Achievement bullets. */
   bullets?: string[];
-  /** Specimen illustration reused as a herbarium marker. */
-  plate: PlateName;
 }
 
 export const experience: Role[] = [
@@ -32,7 +28,6 @@ export const experience: Role[] = [
       "Built AI agents and reusable skills that let non-technical teammates safely ship marketing-site changes, cutting engineering requests by 50%.",
       "Increased marketing website performance (FCP) by 76%.",
     ],
-    plate: "specimen-01-monstera",
   },
   {
     title: "Senior Front End Engineer",
@@ -44,7 +39,6 @@ export const experience: Role[] = [
       "Contributed to deployment pipelines and mentored 4 backend engineers into front-end work; supported design and marketing on the company site.",
       "Contributed to the cert-manager website.",
     ],
-    plate: "specimen-03-strelitzia",
   },
   {
     title: "Front End Engineer",
@@ -56,7 +50,6 @@ export const experience: Role[] = [
       "Led the migration from Redux to React Query and Context across 3 micro-front-ends.",
       "Contributed heavily to the design system; mentored 4 junior engineers.",
     ],
-    plate: "specimen-02-palm",
   },
   {
     title: "Front End Developer",
@@ -66,7 +59,6 @@ export const experience: Role[] = [
       "Owned the front end of the web entry point for banking-sector clients.",
       "Built a configurable form builder with Vue.js, TypeScript, and Webpack; improved UX by reducing the time to complete a loan application by 38%.",
     ],
-    plate: "specimen-04-banana",
   },
   {
     title: "Software Engineer / UI Designer (Freelance)",
@@ -80,14 +72,12 @@ export const experience: Role[] = [
       "Mention Me: front-end and marketing builds serving UK retail brands (Debenhams, Radley, OVO Energy, Joseph Joseph, and others).",
       "Stard.io: built their marketing site and web application front end.",
     ],
-    plate: "specimen-01-monstera",
   },
   {
     title: "Lead Front End Developer / Designer",
     org: "iintegra / Workvine",
     period: "August 2015 – May 2018",
     body: "A founding-team member at Workvine, where I built a series of its IP technologies and led a team of two junior designers. At iintegra I rebuilt and maintained the front-end of their Applicant Tracking System (ATS) and led its design direction and UX.",
-    plate: "specimen-03-strelitzia",
   },
 ];
 

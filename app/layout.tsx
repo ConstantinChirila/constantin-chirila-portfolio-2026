@@ -72,15 +72,6 @@ export default function RootLayout({
     <html lang="en" className={fontVariables}>
       <head>
         <meta name="supported-color-schemes" content="light" />
-        {/* Ensure reveal-on-scroll content is visible even without JS. */}
-        <noscript>
-          {/* eslint-disable-next-line react/no-danger */}
-          <style
-            dangerouslySetInnerHTML={{
-              __html: ".reveal{opacity:1 !important;transform:none !important}",
-            }}
-          />
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

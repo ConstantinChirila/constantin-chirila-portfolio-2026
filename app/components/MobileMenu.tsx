@@ -32,10 +32,11 @@ export default function MobileMenu() {
       {/* Any click inside the panel (a link or the email CTA) closes the menu */}
       <div className="mobilemenu-panel" onClick={close}>
         {nav.links.map((link) => (
-          <Link key={link.href} href={`/${link.href}`}>
+          <Link key={link.href} href={link.href}>
             {link.label}
           </Link>
         ))}
+        <Link href={nav.cvCta.href}>{nav.cvCta.label}</Link>
         <EmailLink subject="Hello">{nav.cta.label}</EmailLink>
       </div>
     </details>

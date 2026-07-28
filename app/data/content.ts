@@ -1,110 +1,237 @@
-import type { PlateName } from "@/app/lib/plates";
-
 export const nav = {
   brandFirst: "Constantin",
   brandLast: "Chirila",
   links: [
-    { label: "Gardens", href: "#work" },
-    // Method link removed from nav (the section still lives on the homepage).
-    // { label: "Method", href: "#process" },
-    // Conservatory hidden until the tools are ready to show.
-    // { label: "Conservatory", href: "#tools" },
-    // Almanac hidden until there are articles ready.
-    // { label: "Almanac", href: "almanac" },
-    { label: "About", href: "about" },
-    { label: "CV", href: "cv" },
+    { label: "Work", href: "/#work" },
+    { label: "Notes", href: "/almanac" },
+    { label: "About", href: "/about" },
   ],
-  cta: { label: "Correspond", href: "#contact" },
+  cvCta: { label: "CV", href: "/cv" },
+  cta: { label: "Correspond →", href: "#contact" },
 };
 
+export const hero = {
+  eyebrow: "Front-end engineer · Design & UX · Est. 2013",
+  title: "Software, engineered to spec.",
+  intro:
+    "I'm a front-end engineer with a designer's eye. I build fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it. Design is where I started, so I care how the whole thing feels, not just how it works.",
+  plateLabel: "3 disciplines → 1 build",
+};
+
+export interface ToolkitRow {
+  index: string;
+  label: string;
+  chips: string[];
+}
+
+// Content mirrors the CV skill groups (app/data/cv.ts), phrased for the toolkit table.
+export const toolkit: ToolkitRow[] = [
+  {
+    index: "A",
+    label: "Languages & core",
+    chips: [
+      "TypeScript",
+      "JavaScript ES2023+",
+      "React",
+      "Next.js",
+      "Node.js",
+      "CSS3 · SASS",
+      "Python",
+      "Kubernetes (basics)",
+    ],
+  },
+  {
+    index: "B",
+    label: "State & data",
+    chips: ["React Query", "Context API", "Redux", "GraphQL", "REST APIs", "MongoDB"],
+  },
+  {
+    index: "C",
+    label: "Testing & quality",
+    chips: [
+      "Jest",
+      "React Testing Library",
+      "Playwright",
+      "Cypress",
+      "TDD: unit · integration · E2E",
+    ],
+  },
+  {
+    index: "D",
+    label: "Tooling & delivery",
+    chips: [
+      "Git",
+      "GitHub Actions CI/CD",
+      "Vite",
+      "Webpack",
+      "Lighthouse · Web Vitals",
+      "WCAG",
+      "Storybook",
+      "Figma",
+    ],
+  },
+  {
+    index: "E",
+    label: "Practices",
+    chips: [
+      "Component architecture",
+      "Design systems",
+      "Responsive & accessible UI",
+      "AI-assisted development",
+      "Agents & local LLM workflows",
+    ],
+  },
+];
+
+export type DisciplinePlate = "spiral" | "lattice" | "nested";
+
 export interface Discipline {
-  emblem: PlateName;
+  plate: DisciplinePlate;
+  plateLabel: string;
   title: string;
   body: string;
-  latin: string;
+  chips: string[];
 }
 
 export const disciplines: Discipline[] = [
   {
-    emblem: "emblem-stem",
-    title: "Front-end engineering",
-    body: "The part people actually touch: fast, accessible interfaces built in React and TypeScript, with clean, maintainable code and design systems that hold up as they grow.",
-    latin: "the visible growth",
+    plate: "spiral",
+    plateLabel: "01 / VISIBLE LAYER",
+    title: "Front-end engineering.",
+    body: "The part people actually touch: fast, accessible interfaces in React and TypeScript, with clean code and design systems that hold up as they grow.",
+    chips: ["React", "TypeScript", "Next.js"],
   },
   {
-    emblem: "emblem-bloom",
-    title: "Design & UX",
-    body: "Where I started, over a decade ago. A real design and illustration background means interfaces judged by how they're used, not how they demo, and an eye for the details that make software feel considered.",
-    latin: "where I first grew",
+    plate: "lattice",
+    plateLabel: "02 / ORIGIN",
+    title: "Design & UX.",
+    body: "Where I started, over a decade ago. Interfaces judged by how they're used, not how they demo, plus an eye for the details that make software feel considered.",
+    chips: ["Figma", "Systems", "Motion"],
   },
   {
-    emblem: "emblem-root",
-    title: "Backend when it's needed",
-    body: "When a project needs the whole thing, I build the APIs and systems behind the front-end too, so I can take an app from idea to something running, on my own.",
-    latin: "the roots, within reach",
+    plate: "nested",
+    plateLabel: "03 / SUBSTRUCTURE",
+    title: "Backend when needed.",
+    body: "When a project needs the whole thing, I build the APIs and systems behind the front-end too, taking it from idea to something running, on my own.",
+    chips: ["Node", "Postgres", "APIs"],
   },
 ];
 
-export interface Season {
-  n: string;
+export interface WorkEntry {
+  no: string;
+  client: string;
+  scope: string;
+  type: "Startup" | "Scale-up" | "OSS";
+  stack: string;
+  year: string;
+}
+
+// Dates cross-checked against the CV; Dapr work happened inside the Diagrid
+// engagement, hence the shared range.
+export const work: WorkEntry[] = [
+  {
+    no: "01",
+    client: "Diagrid",
+    scope: "Conductor & Catalyst: front-end architecture, workflow visualiser",
+    type: "Startup",
+    stack: "React · Next.js · TS · Node.js · Python · k8s · Cypress · CI/CD",
+    year: "2022–26",
+  },
+  {
+    no: "02",
+    client: "Dapr",
+    scope: "Open-source JS SDK: Workflows, Conversation API",
+    type: "OSS",
+    stack: "TypeScript · Node.js · Dapr",
+    year: "2022–26",
+  },
+  {
+    no: "03",
+    client: "Jetstack",
+    scope: "Secure Platform front end, docs as one Next.js app",
+    type: "Startup",
+    stack: "React · TS · Playwright · Next.js · k8s",
+    year: "2021–22",
+  },
+  {
+    no: "04",
+    client: "Cert Manager",
+    scope: "Website & documentation front end",
+    type: "OSS",
+    stack: "Next.js · MDX",
+    year: "2022",
+  },
+  {
+    no: "05",
+    client: "Purplebricks",
+    scope: "Search, listings, refunds app across micro-front-ends",
+    type: "Scale-up",
+    stack: "React · TS · Next.js · Storybook · Cypress · React Query",
+    year: "2019–21",
+  },
+  {
+    no: "06",
+    client: "Rapticore",
+    scope: "Cybersecurity observability UI: led 4 engineers, design + front end",
+    type: "Startup",
+    stack: "React · TS",
+    year: "2019–22",
+  },
+  {
+    no: "07",
+    client: "Mention Me",
+    scope: "Referral front ends for UK retail brands",
+    type: "Scale-up",
+    stack: "Design · JS · CSS · HTML",
+    year: "2016–19",
+  },
+  {
+    no: "08",
+    client: "Workvine",
+    scope: "Founding team: product UI, end-to-end delivery",
+    type: "Startup",
+    stack: "Design · JS · CSS · HTML",
+    year: "2015–18",
+  },
+];
+
+export const previousClients: string[] = [
+  "OVO Energy",
+  "Belstaff",
+  "Debenhams",
+  "Evans Cycles",
+  "Biscuiteers",
+  "University of Worcester",
+  "Iintegra",
+  "Flex Recruitment",
+];
+
+export interface MethodStage {
+  numeral: string;
   title: string;
   body: string;
 }
 
-export const seasons: Season[] = [
+export const method: MethodStage[] = [
   {
-    n: "i. prepare the ground",
+    numeral: "I",
     title: "Frame",
     body: "Work out the real problem, the constraints, and what success looks like, before any code is written.",
   },
   {
-    n: "ii. plant",
+    numeral: "II",
     title: "Shape",
-    body: "Plan the build and choose the right tools for it. Every decision is written down, so nothing is a black box.",
+    body: "Plan the build and choose the right tools for it. Every decision written down, so the team can follow it later.",
   },
   {
-    n: "iii. tend",
+    numeral: "III",
     title: "Build",
-    body: "Build in short cycles, front-end first, with working software to see early and often.",
+    body: "Short cycles, front-end first, with working software to see early and often.",
   },
   {
-    n: "iv. harvest",
+    numeral: "IV",
     title: "Launch",
-    body: "Ship it. What's left is clean, documented code a team can own outright, or I stay on to keep building.",
-  },
-];
-
-export type ToolStatus = "live" | "wip" | "plan";
-
-export interface Tool {
-  insect: PlateName;
-  status: ToolStatus;
-  statusLabel: string;
-  title: string;
-  body: string;
-}
-
-export const tools: Tool[] = [
-  {
-    insect: "insect-hummingbird",
-    status: "live",
-    statusLabel: "In bloom",
-    title: "Playlist Exporter",
-    body: "Export any Spotify playlist to a spreadsheet with ready-made YouTube search links. No migration middleman.",
-  },
-  {
-    insect: "insect-morpho",
-    status: "wip",
-    statusLabel: "Budding",
-    title: "Wire Protocol Tester",
-    body: "Inspect and replay peer-to-peer transfers over local Wi-Fi. The debugging tool I wanted while building offline sync.",
-  },
-  {
-    insect: "insect-beetle",
-    status: "plan",
-    statusLabel: "Seed",
-    title: "Grid Composer",
-    body: "Generate and export layout grids as CSS or design tokens. A small utility that keeps my builds consistent.",
+    body: "Ship it. What's left is clean, documented code a team can own outright, or I stay on and keep building.",
   },
 ];
 
@@ -117,39 +244,23 @@ export interface Testimonial {
 export const testimonials: Testimonial[] = [
   {
     quote:
-      "At Mention Me we worked with Constantin for a few years and were constantly impressed both by the quality and promptness of his output. He was always willing to go out of his way to make sure we (and our clients) got a great finished product.",
+      "Constantly impressed by both the quality and promptness of his output. Always willing to go out of his way so we, and our clients, got a great finished product.",
     name: "Simon Dring",
     role: "Head of Client Success · Mention Me",
   },
   {
     quote:
-      "Having worked with Constantin for a few years, we can safely say that we are impressed and satisfied; he is thorough and knowledgeable and he always had our company's interests in mind when delivering.",
+      "Thorough and knowledgeable. He always had our company's interests in mind when delivering.",
     name: "Madison Lee",
-    role: "Regional Business Development Manager · iFootage Gear",
+    role: "Regional BD Manager · iFootage Gear",
   },
   {
     // NOTE: original quote said "designer", softened to "professional", confirm with David Hobbs.
     quote:
-      "Constantin was a real pleasure to work with and we look forward to working with him again. He's definitely the kind of professional you can trust with a project from start to finish.",
+      "A real pleasure to work with. Definitely the kind of professional you can trust with a project from start to finish.",
     name: "David Hobbs",
     role: "Software Development Director · Workvine",
   },
-];
-
-export const clients: string[] = [
-  "Diagrid",
-  "Dapr",
-  "Jetstack",
-  "Cert Manager",
-  "Purplebricks",
-  "Mention Me",
-  "Debenhams",
-  "OVO Energy",
-  "Belstaff",
-  "Evans Cycles",
-  "Biscuiteers",
-  "University of Worcester",
-  "Workvine",
 ];
 
 export interface Value {
@@ -171,10 +282,20 @@ export const values: Value[] = [
     body: "Every trade-off documented; nothing lives only in my head.",
   },
   {
-    title: "Grow it to last",
+    title: "Build it to last",
     body: "Foundations before flourishes, so the software is still standing in five years.",
   },
 ];
+
+export const contact = {
+  label: "Correspondence",
+  title: "Something worth building?",
+  details: [
+    { term: "Based", detail: "United Kingdom · remote" },
+    { term: "Practising", detail: "Since 2013" },
+    { term: "Response", detail: "Within one working day" },
+  ],
+};
 
 export const social = {
   github: "https://github.com/ConstantinChirila",

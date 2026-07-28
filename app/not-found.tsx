@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PlateFrame from "@/app/components/PlateFrame";
-import PlateImage from "@/app/components/PlateImage";
-import Splotch from "@/app/components/Splotch";
 
 export const metadata: Metadata = {
   title: "Page not found",
@@ -11,40 +8,18 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <>
-      <section id="notfound">
-        <Splotch colour="coral" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate ∅">
-            <div className="case-head">
-              <div className="crest">
-                <PlateImage
-                  name="specimen-03-strelitzia"
-                  alt=""
-                  priority
-                  sizes="(max-width: 640px) 80vw, 360px"
-                />
-              </div>
-              <h1>Lost in the undergrowth</h1>
-              <p className="cap">
-                Pagina non inventa · fam. Quadringenti-quattuor
-              </p>
-            </div>
-
-            <p className="cv-intro">
-              The page you were looking for isn&apos;t here. It may have been
-              moved, renamed, or never planted at all. No harm done: let&apos;s
-              get you back on the path.
-            </p>
-
-            <div className="almanac-more">
-              <Link href="/" className="btn solid">
-                Back to the folio
-              </Link>
-            </div>
-          </PlateFrame>
-        </div>
-      </section>
-    </>
+    <section className="notfound">
+      <span className="code">Error 404 · Page not found</span>
+      <h1>Nothing at this address.</h1>
+      <p>
+        The page you were looking for isn&apos;t here. It may have been moved,
+        renamed, or never built at all. Let&apos;s get you back on track.
+      </p>
+      <div className="acts">
+        <Link href="/" className="btn btn-orange">
+          Back to the front page
+        </Link>
+      </div>
+    </section>
   );
 }

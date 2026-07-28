@@ -6,9 +6,8 @@ export const contentType = OG_CONTENT_TYPE;
 
 export default function OpengraphImage() {
   return renderOgImage({
-    eyebrow: "Senior front-end engineer · Design-led · Birmingham, UK",
-    titleLead: "Curriculum",
-    titleAccent: "Vitae.",
+    eyebrow: "Curriculum vitae",
+    title: "The full record.",
     subtitle:
       "10+ years building for the web: experience, education, and the tools I work with.",
   });

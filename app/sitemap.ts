@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/almanac`, changeFrequency: "weekly", priority: 0.6 },
   ];
 
-  // getAllPosts already excludes drafts in production.
+  // getAllPosts excludes drafts (see includeDrafts in app/lib/almanac.ts).
   const posts: MetadataRoute.Sitemap = getAllPosts().map((p) => ({
     url: `${siteUrl}/almanac/${p.slug}`,
     changeFrequency: "monthly",
