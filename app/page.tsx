@@ -1,276 +1,291 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PlateFrame from "./components/PlateFrame";
-import PlateHead from "./components/PlateHead";
-import PlateImage from "./components/PlateImage";
-import Splotch from "./components/Splotch";
-import VellumPanel from "./components/VellumPanel";
-import Reveal from "./components/Reveal";
+import ComingSoon from "./components/ComingSoon";
 import EmailLink from "./components/EmailLink";
-// Restore alongside the hidden sections:
-//   import SpecimenRow from "./components/SpecimenRow";
-//   import { specimens } from "./data/specimens";
-//   import { getAllPosts } from "./lib/almanac";  (for the almanac)
-//   (and add `tools` back to the content import below for the conservatory)
-import { clients, disciplines, seasons, testimonials } from "./data/content";
+import { Lattice, Nested, Rosette, Spiral, Waves } from "./components/plates";
+import { ORANGE } from "./lib/palette";
+import {
+  disciplines,
+  hero,
+  method,
+  previousClients,
+  testimonials,
+  toolkit,
+  work,
+  type DisciplinePlate,
+} from "./data/content";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
+// Plates inherit each section's text colour (currentColor); only plates on
+// dark sections need the explicit orange stroke.
+const disciplinePlates: Record<DisciplinePlate, React.ReactNode> = {
+  spiral: <Spiral />,
+  lattice: <Lattice />,
+  nested: <Nested />,
+};
+
 export default function Home() {
   return (
     <>
-      {/* ---- Hero: the title page ---- */}
-      <header className="hero" id="top">
-        <Splotch colour="rose" className="s1" />
-        <Splotch colour="ochre" className="s2" />
-        <div className="plate-slot hero-flora">
-          <PlateImage
-            name="hero-flora-right"
-            alt=""
-            className="plate-img"
-            priority
-            sizes="(max-width: 760px) 46vw, 560px"
-          />
-        </div>
-        <div className="plate-slot hero-flora-l">
-          <PlateImage
-            name="hero-flora-left"
-            alt=""
-            className="plate-img"
-            priority
-            sizes="(max-width: 760px) 38vw, 440px"
-          />
-        </div>
-        <div className="wrap">
-          <VellumPanel>
-            <p className="caps est">
-              Front-end engineer · Design &amp; UX · Est. 2013
-            </p>
-            <div className="flourish">
-              <span className="line" />
-              <svg
-                width="26"
-                height="18"
-                viewBox="0 0 26 18"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M13 16 C13 10, 9 6, 3 5 C8 3, 12 6, 13 10 C14 6, 18 3, 23 5 C17 6, 13 10, 13 16 Z"
-                  stroke="#2E4229"
-                  strokeWidth="1.1"
-                />
-              </svg>
-              <span className="line" />
+      {/* ---- Hero (orange) ---- */}
+      <section className="hero" id="top">
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <div className="hero-top">
+              <p className="hero-eyebrow">{hero.eyebrow}</p>
+              <h1>{hero.title}</h1>
+              <div className="hero-intro">
+                <p>{hero.intro}</p>
+              </div>
             </div>
-            <h1>
-              Software, carefully <em>cultivated.</em>
-            </h1>
-            <p className="sub">
-              <b>I&apos;m a front-end engineer with a designer&apos;s eye.</b> I
-              build fast, accessible interfaces in React and TypeScript, and the
-              backend to run them when a project needs it. Design is where I
-              started, so I care how the whole thing feels, not just how it
-              works.
-            </p>
-            <p className="latin binomial">
-              Faber interfaciorum · fam. Frontendaceae · habitat: United
-              Kingdom, remote
-            </p>
-            <div className="acts">
-              <EmailLink className="btn solid" subject="Starting a project">
-                Start a project
+            <div className="hero-acts">
+              <EmailLink className="btn btn-ink" subject="Starting a project">
+                Start a project <span className="arrow">↗</span>
               </EmailLink>
-              <Link href="/cv" className="btn ghost">
-                Curriculum Vitae
+              <Link href="/cv" className="btn btn-ink-outline">
+                Curriculum vitae
               </Link>
             </div>
-          </VellumPanel>
-        </div>
-      </header>
+          </div>
 
-      {/* ---- Plate I: disciplines ---- */}
-      <section id="bearings">
-        <Splotch colour="periwinkle" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate I">
-            <PlateHead
-              crest="flourish-disciplines"
-              title="Three disciplines, one gardener"
-              latin="front-end at the centre, design in the roots, backend within reach"
-            />
-            <div className="bearings">
-              {disciplines.map((d) => (
-                <div className="bearing" key={d.title}>
-                  <div className="emblem plate-slot">
-                    <PlateImage name={d.emblem} alt="" sizes="96px" />
-                  </div>
-                  <h3>{d.title}</h3>
-                  <p>{d.body}</p>
-                  <span className="latin">{d.latin}</span>
-                </div>
-              ))}
+          <div className="hero-plate">
+            <div className="plate-art">
+              {/* 19 points matches the approved mock: chords sweep the interior
+                  instead of hugging the rim as they do at higher densities. */}
+              <Rosette density={19} />
             </div>
-          </PlateFrame>
+            <div className="hero-emblem">
+              <span className="diamond" />
+              <span className="legend">
+                Design
+                <br />
+                ×
+                <br />
+                Engineering
+              </span>
+            </div>
+            <span className="plate-caption">{hero.plateLabel}</span>
+          </div>
         </div>
       </section>
 
-      {/* ---- Plate II: selected specimens ---- */}
-      <section id="work">
-        <Splotch colour="rose" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate II">
-            {/* Selected specimens: hidden until real case studies are ready.
-                Uncomment the PlateHead + SpecimenRow list below to bring them
-                back (and restore the `specimens` / `SpecimenRow` imports).
-            <PlateHead
-              crest="flourish-specimens"
-              title="Selected specimens"
-              latin="collected in the field, 2013 to present"
-            />
-            {specimens.map((s) => (
-              <SpecimenRow key={s.slug} specimen={s} />
-            ))}
-            */}
-            <PlateHead
-              crest="flourish-specimens"
-              title="Gardens I've tended along the way"
-              latin="the beds I've kept, 2013 to present"
-            />
-            <div className="clients bare">
-              <ul>
-                {clients.map((c) => (
-                  <li key={c}>{c}</li>
+      {/* ---- Toolkit (ink) ---- */}
+      <section className="toolkit" aria-label="Toolkit">
+        <div className="toolkit-inner">
+          <div className="toolkit-head">
+            <h2>The toolkit.</h2>
+            <span className="caption">
+              Ten years in production · React &amp; TypeScript at scale
+            </span>
+          </div>
+          {toolkit.map((row) => (
+            <div className="tk-row" key={row.index}>
+              <div className="tk-cat">
+                <span>{row.index}</span>
+                <span className="dash" aria-hidden="true" />
+                <span className="name">{row.label}</span>
+              </div>
+              <div className="tk-chips">
+                {row.chips.map((chip) => (
+                  <span key={chip}>{chip}</span>
                 ))}
-              </ul>
+              </div>
             </div>
-          </PlateFrame>
+          ))}
         </div>
       </section>
 
-      {/* ---- Plate III: the method ---- */}
-      <section id="process">
-        <Splotch colour="ochre" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate III">
-            <PlateHead
-              crest="flourish-method"
-              title="The method"
-              latin="how I work, in four seasons"
-            />
-            <div className="seasons">
-              {seasons.map((s) => (
-                <div className="season" key={s.title}>
-                  <span className="n">{s.n}</span>
-                  <h4>{s.title}</h4>
-                  <p>{s.body}</p>
+      {/* ---- Three disciplines (bone) ---- */}
+      {/* id="about" keeps the prototype's anchor working for external
+          /#about links; the About page itself lives at /about. */}
+      <section className="section-light disciplines" id="about">
+        <div className="section-head">
+          <h2>Three disciplines. One build.</h2>
+          <p className="caption">
+            Front-end at the centre, design underneath it, backend within reach.
+          </p>
+        </div>
+        <div className="disc-grid">
+          {disciplines.map((d) => (
+            <article key={d.title}>
+              <div className="disc-art">
+                <div className="plate-art">{disciplinePlates[d.plate]}</div>
+                <span className="tag">{d.plateLabel}</span>
+              </div>
+              <div className="disc-body">
+                <h3>{d.title}</h3>
+                <p>{d.body}</p>
+                <div className="pill-chips">
+                  {d.chips.map((chip) => (
+                    <span key={chip}>{chip}</span>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </PlateFrame>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* ---- Plate IV: the conservatory, hidden until the tools are ready to show. Uncomment to restore. ----
-      <section id="tools">
-        <Splotch colour="coral" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate IV">
-            <PlateHead
-              crest="flourish-conservatory"
-              title="The conservatory"
-              latin="small instruments, built for my own work & freely shared"
-            />
-            <div className="kit">
-              {tools.map((t) => (
-                <div className="tool" key={t.title}>
-                  <div className="insect plate-slot">
-                    <PlateImage name={t.insect} alt="" />
-                  </div>
-                  <span className={`st ${t.status}`}>{t.statusLabel}</span>
-                  <h4>{t.title}</h4>
-                  <p>{t.body}</p>
-                </div>
-              ))}
-            </div>
-          </PlateFrame>
+      {/* ---- Selected work (ink) ---- */}
+      <section className="section-dark work" id="work">
+        <div className="section-head">
+          <h2>Things I&apos;ve shipped.</h2>
+          <span className="caption">Eight engagements · 2015–present</span>
         </div>
-      </section>
-      */}
-
-      {/* ---- Plate V: the almanac, hidden until there are articles ready. Uncomment to restore (and re-add the getAllPosts import + notes const above). ----
-      <section id="notes">
-        <div className="wrap">
-          <PlateFrame plateNo="Plate V">
-            <PlateHead
-              crest="flourish-almanac"
-              title="From the almanac"
-              latin="a few recent field notes"
-            />
-            {notes.slice(0, 3).map((n) => (
-              <Link className="entry" href={`/almanac/${n.slug}`} key={n.slug}>
-                <span className="d">{n.date}</span>
-                <h4>{n.title}</h4>
-                <span className="c">{n.draft ? "Draft" : n.category}</span>
-              </Link>
+        {/* Divs styled as a grid, with table semantics for assistive tech.
+            The header row is display:none under 780px, where rows stack. */}
+        <div role="table" aria-label="Selected work">
+          <div className="work-cols work-thead" role="row">
+            <span role="columnheader">No.</span>
+            <span role="columnheader">Client</span>
+            <span role="columnheader">Scope</span>
+            <span role="columnheader">Type</span>
+            <span role="columnheader">Stack</span>
+            <span className="year" role="columnheader">
+              Year
+            </span>
+          </div>
+          {work.map((w) => (
+            <div className="work-cols work-row" role="row" key={w.no}>
+              <span className="no" role="cell">
+                {w.no}
+              </span>
+              <span className="client" role="cell">
+                {w.client}
+              </span>
+              <span className="scope" role="cell">
+                {w.scope}
+              </span>
+              <span className="type" role="cell">
+                {w.type}
+              </span>
+              <span className="stack" role="cell">
+                {w.stack}
+              </span>
+              <span className="year" role="cell">
+                {w.year}
+              </span>
+            </div>
+          ))}
+        </div>
+        <div className="work-prev">
+          <span className="label">
+            Previous clients · companies I&apos;ve built for
+          </span>
+          <div className="chips">
+            {previousClients.map((c) => (
+              <span key={c}>{c}</span>
             ))}
-            <div className="almanac-more">
-              <Link href="/almanac" className="btn ghost">
-                Read the full almanac →
-              </Link>
-            </div>
-          </PlateFrame>
-        </div>
-      </section>
-      */}
-
-      {/* ---- Plate VI: pressed & kept ---- */}
-      <section id="voices">
-        <Splotch colour="periwinkle" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate VI">
-            <PlateHead
-              crest="flourish-voices"
-              title="Pressed & kept"
-              latin="kind words from people I've worked with"
-            />
-            <div className="quotes">
-              {testimonials.map((t) => (
-                <div className="q" key={t.name}>
-                  <p>{t.quote}</p>
-                  <div className="by">
-                    <b>{t.name}</b>
-                    {t.role}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </PlateFrame>
+          </div>
         </div>
       </section>
 
-      {/* ---- Contact: the calling card (before About, by client's choice) ---- */}
-      <section className="contact" id="contact">
-        <Splotch colour="rose" className="c1" />
-        <Splotch colour="ochre" className="c2" />
-        <Reveal className="wrap">
-          <h2>
-            Something worth <em>growing?</em>
-          </h2>
-          <div className="plate-slot contact-letter">
-            <PlateImage
-              name="flourish-contact"
-              alt=""
-              sizes="(max-width: 640px) 80vw, 320px"
-            />
-          </div>
-          <div className="acts">
-            <EmailLink className="btn solid" showAddress />
-          </div>
-        </Reveal>
+      {/* ---- Latest writing (bone) ---- */}
+      <section className="section-light writing" id="writing">
+        <div className="section-head">
+          <h2>Notes.</h2>
+          <Link href="/almanac" className="btn btn-bone-outline">
+            All notes <span className="arrow">↗</span>
+          </Link>
+        </div>
+        <div className="writing-grid">
+          {/* Coming-soon placeholder. When the first posts are published
+              (draft: false in content/almanac/*.mdx), delete this card and
+              restore the mapped cards below. */}
+          <ComingSoon
+            className="writing-card writing-soon"
+            foot={["In progress", "Check back"]}
+          />
+
+          {/* To publish real posts:
+              1. Set draft: false in the post frontmatter.
+              2. Re-add at the top of this file:
+                   import { getAllPosts } from "./lib/almanac";
+                 and inside Home():
+                   const posts = getAllPosts().slice(0, 3);
+              3. Replace the ComingSoon card above with:
+
+          {posts.map((p, i) => (
+            <Link
+              href={`/almanac/${p.slug}`}
+              className="writing-card"
+              key={p.slug}
+            >
+              <div className="card-top">
+                <span>
+                  {String(i + 1).padStart(3, "0")} / {p.category}
+                </span>
+                <span className="ring" aria-hidden="true" />
+              </div>
+              <div className="card-mid">
+                <span className="title">{p.title}</span>
+                <span className="dek">{p.excerpt}</span>
+              </div>
+              <div className="card-foot">
+                <span>{p.date}</span>
+                <span>{p.readTime}</span>
+              </div>
+            </Link>
+          ))}
+          */}
+        </div>
       </section>
+
+      {/* ---- Method (ink) ---- */}
+      <section className="section-dark method" id="method">
+        <div className="section-head">
+          <h2>The method.</h2>
+          <span className="caption">Four stages · nothing is a black box</span>
+        </div>
+        <div className="method-grid">
+          {method.map((stage) => (
+            <div className="method-stage" key={stage.numeral}>
+              <div className="method-node">
+                <span className="dot" aria-hidden="true" />
+                <span className="wire" aria-hidden="true" />
+                <span className="numeral">{stage.numeral}</span>
+              </div>
+              <h3>{stage.title}</h3>
+              <p>{stage.body}</p>
+            </div>
+          ))}
+        </div>
+        <div className="method-band">
+          <div className="plate-art">
+            {/* Explicit stroke: the section's text colour is bone, not orange */}
+            <Waves stroke={ORANGE} density={21} />
+          </div>
+        </div>
+      </section>
+
+      {/* ---- References (bone) ---- */}
+      <section className="section-light refs" id="refs">
+        <div className="section-head">
+          <h2>On the record.</h2>
+          <span className="caption">Words from people I&apos;ve worked with</span>
+        </div>
+        <div className="refs-grid">
+          {testimonials.map((t) => (
+            <figure className="ref-card" key={t.name}>
+              <div className="ref-mark" aria-hidden="true">
+                <span className="sq" />
+                <span className="ci" />
+              </div>
+              <blockquote>&ldquo;{t.quote}&rdquo;</blockquote>
+              <figcaption>
+                {t.name}
+                <br />
+                <span>{t.role}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      {/* Contact + footer strip render from the shared <Footer /> in layout.tsx */}
     </>
   );
 }

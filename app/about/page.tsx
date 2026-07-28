@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PlateFrame from "@/app/components/PlateFrame";
-import PlateHead from "@/app/components/PlateHead";
-import PlateImage from "@/app/components/PlateImage";
-import Splotch from "@/app/components/Splotch";
-import ValueGrid from "@/app/components/ValueGrid";
+import Image from "next/image";
 import { values } from "@/app/data/content";
 
 export const metadata: Metadata = {
@@ -17,52 +13,62 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <section id="about">
-        <Splotch colour="ochre" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate VII">
-            <PlateHead
-              title="The gardener"
-              latin="Constantin Chirila · perennial, hardy · british/romanian"
+      <section className="page-hero">
+        <span className="eyebrow">Profile · British / Romanian</span>
+        <h1>Engineer, by way of design.</h1>
+      </section>
+
+      <section className="page-body">
+        <div className="about-grid">
+          <figure className="about-portrait">
+            <Image
+              src="/portrait.webp"
+              alt="Halftone portrait of Constantin Chirila in ink and orange"
+              width={1122}
+              height={1402}
+              sizes="(max-width: 900px) 320px, 320px"
+              priority
             />
-            <div className="about-grid">
-              <div className="portrait plate-slot">
-                <PlateImage
-                  name="portrait"
-                  alt="Engraved portrait of Constantin Chirila"
-                  className="plate-img"
-                  sizes="(max-width: 860px) 300px, 320px"
-                />
-                <p className="cap">The author, observed from life</p>
-              </div>
-              <div className="about-text">
-                <p>
-                  <b>
-                    I&apos;m Constantin, a Romanian-born British front-end
-                    engineer with a designer&apos;s background.
-                  </b>{" "}
-                  I started in design and illustration over a decade ago, moved
-                  into engineering, and have spent 10+ years building interfaces
-                  for the web: mostly in React and TypeScript, always with an
-                  eye for how the thing feels to use.
-                </p>
-                <p>
-                  Design is still where I think from, so I care about the
-                  details most people only notice when they&apos;re missing.
-                  When a project needs more than the front-end, I build the
-                  backend and APIs to run it too, which means I can take an app
-                  from first sketch to something running. What I leave behind is
-                  clean, documented code a team can own without me in the room.
-                </p>
-                <ValueGrid values={values} />
-                <div className="about-cta">
-                  <Link href="/cv" className="btn solid">
-                    Read the full CV →
-                  </Link>
+            <figcaption className="cap">
+              Constantin Chirila · United Kingdom, remote
+            </figcaption>
+          </figure>
+
+          <div className="about-text">
+            <p>
+              <b>
+                I&apos;m Constantin, a Romanian-born British front-end engineer
+                with a designer&apos;s background.
+              </b>{" "}
+              I started in design and illustration over a decade ago, moved into
+              engineering, and have spent 10+ years building interfaces for the
+              web: mostly in React and TypeScript, always with an eye for how
+              the thing feels to use.
+            </p>
+            <p>
+              Design is still where I think from, so I care about the details
+              most people only notice when they&apos;re missing. When a project
+              needs more than the front-end, I build the backend and APIs to run
+              it too, which means I can take an app from first sketch to
+              something running. What I leave behind is clean, documented code a
+              team can own without me in the room.
+            </p>
+
+            <div className="values-grid">
+              {values.map((v) => (
+                <div className="value" key={v.title}>
+                  <h3>{v.title}</h3>
+                  <p>{v.body}</p>
                 </div>
-              </div>
+              ))}
             </div>
-          </PlateFrame>
+
+            <div className="about-cta">
+              <Link href="/cv" className="btn btn-bone-outline">
+                Read the full CV <span className="arrow">→</span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

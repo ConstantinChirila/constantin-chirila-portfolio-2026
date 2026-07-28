@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import PlateFrame from "@/app/components/PlateFrame";
-import PlateImage from "@/app/components/PlateImage";
-import Splotch from "@/app/components/Splotch";
 import {
   cvMeta,
   cvProfile,
@@ -20,88 +17,89 @@ export const metadata: Metadata = {
 export default function CvPage() {
   return (
     <>
-      <section id="cv">
-        <Splotch colour="periwinkle" />
-        <div className="wrap">
-          <PlateFrame plateNo="Curriculum Vitae">
-            <div className="case-head">
-              <div className="crest wide">
-                <PlateImage
-                  name="cv-flourish"
-                  alt=""
-                  priority
-                  sizes="(max-width: 640px) 94vw, 600px"
-                />
+      <section className="page-hero">
+        <span className="eyebrow">Curriculum vitae</span>
+        <h1>The full record.</h1>
+        <p className="caption">{cvMeta}</p>
+      </section>
+
+      <section className="page-body">
+        <p className="cv-intro">{cvProfile}</p>
+
+        <div className="cv-download">
+          <a
+            href="/constantin-chirila-cv.pdf"
+            download
+            className="btn btn-bone-outline"
+          >
+            Download PDF <span className="arrow">↓</span>
+          </a>
+        </div>
+
+        {/* Experience */}
+        <div className="cv-section">
+          <div className="cv-section-head">
+            <span className="idx">A</span>
+            <span className="dash" aria-hidden="true" />
+            <span>Experience</span>
+          </div>
+          {experience.map((role) => (
+            <div className="cv-role" key={`${role.org}-${role.period}`}>
+              <span className="when">{role.period}</span>
+              <div>
+                <h3>{role.title}</h3>
+                <p className="org">{role.org}</p>
+                {role.body && <p className="role-body">{role.body}</p>}
+                {role.bullets && (
+                  <ul>
+                    {role.bullets.map((b) => (
+                      <li key={b}>{b}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <h1>Curriculum Vitae</h1>
-              <p className="cap">{cvMeta}</p>
             </div>
+          ))}
+        </div>
 
-            <p className="cv-intro">{cvProfile}</p>
-
-            <div className="cv-download">
-              <a
-                href="/constantin-chirila-cv.pdf"
-                download
-                className="btn solid"
-              >
-                Download PDF ↓
-              </a>
-            </div>
-
-            {/* Experience */}
-            <h2 className="cv-h2">Experience</h2>
-            <div className="cv-roles">
-              {experience.map((role) => (
-                <div className="cv-role" key={`${role.org}-${role.period}`}>
-                  <div className="marker" aria-hidden="true">
-                    <PlateImage name={role.plate} alt="" sizes="100px" />
-                  </div>
-                  <div>
-                    <h3>{role.title}</h3>
-                    <p className="org">{role.org}</p>
-                    <p className="when">{role.period}</p>
-                    {role.body && <p className="role-body">{role.body}</p>}
-                    {role.bullets && (
-                      <ul className="role-bullets">
-                        {role.bullets.map((b) => (
-                          <li key={b}>{b}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Education */}
-            <h2 className="cv-h2">Education</h2>
-            <div className="cv-edu">
-              {education.map((ed) => (
-                <div className="item" key={ed.qualification}>
-                  <h3>{ed.qualification}</h3>
-                  <p className="place">{ed.place}</p>
-                  <p className="when">{ed.period}</p>
-                  {ed.detail && <p className="detail">{ed.detail}</p>}
-                </div>
-              ))}
-            </div>
-
-            {/* Skills & tools */}
-            <h2 className="cv-h2">Skills &amp; tools</h2>
-            {skillGroups.map((group) => (
-              <div className="chips-group" key={group.label}>
-                <span className="caps">{group.label}</span>
-                <div className="chips">
-                  {group.items.map((s) => (
-                    <span className="chip" key={s}>
-                      {s}
-                    </span>
-                  ))}
-                </div>
+        {/* Education */}
+        <div className="cv-section">
+          <div className="cv-section-head">
+            <span className="idx">B</span>
+            <span className="dash" aria-hidden="true" />
+            <span>Education</span>
+          </div>
+          {education.map((ed) => (
+            <div className="cv-edu" key={ed.qualification}>
+              <span className="when">{ed.period}</span>
+              <div>
+                <h3>{ed.qualification}</h3>
+                <p className="place">{ed.place}</p>
+                {ed.detail && <p className="detail">{ed.detail}</p>}
               </div>
-            ))}
-          </PlateFrame>
+            </div>
+          ))}
+        </div>
+
+        {/* Skills & tools */}
+        <div className="cv-section cv-skills">
+          <div className="cv-section-head">
+            <span className="idx">C</span>
+            <span className="dash" aria-hidden="true" />
+            <span>Skills &amp; tools</span>
+          </div>
+          {skillGroups.map((group) => (
+            <div className="tk-row" key={group.label}>
+              <div className="tk-cat">
+                <span className="name">{group.label}</span>
+              </div>
+              <div className="tk-chips">
+                {group.items.map((s) => (
+                  <span key={s}>{s}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </>

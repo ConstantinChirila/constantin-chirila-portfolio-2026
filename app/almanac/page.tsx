@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import PlateFrame from "@/app/components/PlateFrame";
-import PlateHead from "@/app/components/PlateHead";
-import Splotch from "@/app/components/Splotch";
+import ComingSoon from "@/app/components/ComingSoon";
 import { getAllPosts } from "@/app/lib/almanac";
 
 export const metadata: Metadata = {
-  title: "The almanac",
+  title: "Notes",
   description:
-    "Field notes and observations on front-end engineering, design, and the odd experiment.",
+    "Notes on front-end engineering, design systems, and performance by Constantin Chirila.",
   alternates: { canonical: "/almanac" },
 };
 
@@ -17,34 +15,35 @@ export default function AlmanacPage() {
 
   return (
     <>
-      <section id="notes">
-        <Splotch colour="periwinkle" />
-        <div className="wrap">
-          <PlateFrame plateNo="Plate V">
-            <PlateHead
-              crest="flourish-almanac"
-              title="The almanac"
-              latin="field notes & observations"
-            />
-            {posts.length > 0 ? (
-              posts.map((p) => (
-                <Link
-                  className="entry"
-                  href={`/almanac/${p.slug}`}
-                  key={p.slug}
-                >
-                  <span className="d">{p.date}</span>
-                  <h4>{p.title}</h4>
-                  <span className="c">{p.draft ? "Draft" : p.category}</span>
-                </Link>
-              ))
-            ) : (
-              <p className="cv-intro">
-                Nothing pressed here just yet. Field notes are on the way.
-              </p>
-            )}
-          </PlateFrame>
-        </div>
+      <section className="page-hero">
+        <span className="eyebrow">Writing</span>
+        <h1>Notes.</h1>
+        <p className="caption">
+          Working notes on front-end engineering, design systems, and
+          performance.
+        </p>
+      </section>
+
+      <section className="page-body">
+        {posts.length > 0 ? (
+          <div className="notes-list">
+            {posts.map((p, i) => (
+              <Link className="entry" href={`/almanac/${p.slug}`} key={p.slug}>
+                <span className="no">{String(i + 1).padStart(2, "0")}</span>
+                <span className="title">{p.title}</span>
+                <span className="cat">
+                  {p.draft ? "Draft" : p.category}
+                </span>
+                <span className="date">{p.date}</span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <ComingSoon
+            className="notes-empty"
+            dek="Nothing published yet. The first pieces, on performance budgets, design tokens, and rendering at scale, land here soon."
+          />
+        )}
       </section>
     </>
   );

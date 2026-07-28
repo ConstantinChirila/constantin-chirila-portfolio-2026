@@ -2,7 +2,7 @@
   "name": "constantin-chirila-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Constantin Chirila portfolio: a Victorian botanical folio, built with Next.js.",
+  "description": "Constantin Chirila portfolio: a Swiss engineering-editorial site, built with Next.js.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

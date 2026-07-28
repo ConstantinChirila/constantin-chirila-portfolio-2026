@@ -1,35 +1,17 @@
 import { ImageResponse } from "next/og";
+import { BONE, INK, ORANGE } from "./palette";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 export const OG_CONTENT_TYPE = "image/png";
-
-// A stylised monstera leaf drawn in ink, matching app/icon.svg.
-const LEAF = `
-<svg xmlns="http://www.w3.org/2000/svg" width="440" height="440" viewBox="0 0 64 64">
-  <g fill="none" stroke="#2E4229" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M32 56 C32 52 32 50 32 47" stroke-width="2.4"/>
-    <path d="M32 8 C42 9 51 16 52 27 C52.6 33 50 39 45 43 C39.5 47.3 35 47 32 47 C29 47 24.5 47.3 19 43 C14 39 11.4 33 12 27 C13 16 22 9 32 8 Z" fill="#2E4229" stroke-width="1.2"/>
-    <path d="M32 45 L32 12" stroke="#F4EFE0" stroke-width="1.6"/>
-    <path d="M32 20 L46 22" stroke="#F4EFE0" stroke-width="1.4"/>
-    <path d="M32 20 L18 22" stroke="#F4EFE0" stroke-width="1.4"/>
-    <path d="M32 30 L47 33" stroke="#F4EFE0" stroke-width="1.4"/>
-    <path d="M32 30 L17 33" stroke="#F4EFE0" stroke-width="1.4"/>
-    <path d="M32 39 L43 42" stroke="#F4EFE0" stroke-width="1.4"/>
-    <path d="M32 39 L21 42" stroke="#F4EFE0" stroke-width="1.4"/>
-  </g>
-</svg>`;
-const LEAF_DATA_URI = `data:image/svg+xml;base64,${Buffer.from(LEAF).toString("base64")}`;
 
 // Fetch a Google font as an ArrayBuffer Satori can parse (old UA forces TTF).
 // Returns null on failure so the OG route degrades instead of breaking.
 async function loadGoogleFont(
   family: string,
   weight: number,
-  italic: boolean,
 ): Promise<ArrayBuffer | null> {
   try {
-    const axis = italic ? `ital,wght@1,${weight}` : `wght@${weight}`;
-    const url = `https://fonts.googleapis.com/css2?family=${family}:${axis}`;
+    const url = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`;
     const css = await (
       await fetch(url, {
         headers: {
@@ -51,57 +33,46 @@ async function loadGoogleFont(
 
 interface OgOptions {
   eyebrow: string;
-  titleLead: string;
-  titleAccent?: string;
+  title: string;
   subtitle: string;
 }
 
-const Splotches = () => (
-  <>
+const Logo = ({ size = 56 }: { size?: number }) => (
+  <div
+    style={{
+      width: size,
+      height: size,
+      border: `2px solid ${ORANGE}`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
     <div
       style={{
-        position: "absolute",
-        top: -120,
-        left: -80,
-        width: 460,
-        height: 380,
-        borderRadius: "48% 52% 61% 39% / 44% 57% 43% 56%",
-        background:
-          "radial-gradient(closest-side, rgba(193,96,122,0.42), rgba(193,96,122,0))",
+        width: size * 0.38,
+        height: size * 0.38,
+        background: ORANGE,
+        transform: "rotate(45deg)",
       }}
     />
-    <div
-      style={{
-        position: "absolute",
-        bottom: -120,
-        right: 220,
-        width: 420,
-        height: 360,
-        borderRadius: "48% 52% 61% 39% / 44% 57% 43% 56%",
-        background:
-          "radial-gradient(closest-side, rgba(192,138,45,0.38), rgba(192,138,45,0))",
-      }}
-    />
-  </>
+  </div>
 );
 
 export async function renderOgImage({
   eyebrow,
-  titleLead,
-  titleAccent,
+  title,
   subtitle,
 }: OgOptions): Promise<ImageResponse> {
-  const [display, displayItalic, body] = await Promise.all([
-    loadGoogleFont("Cormorant+Garamond", 500, false),
-    loadGoogleFont("Cormorant+Garamond", 500, true),
-    loadGoogleFont("EB+Garamond", 500, false),
+  const [display, mono] = await Promise.all([
+    loadGoogleFont("Archivo", 500),
+    loadGoogleFont("IBM+Plex+Mono", 400),
   ]);
 
   const fonts = [
-    display && { name: "Cormorant", data: display, weight: 500 as const, style: "normal" as const },
-    displayItalic && { name: "Cormorant", data: displayItalic, weight: 500 as const, style: "italic" as const },
-    body && { name: "EB Garamond", data: body, weight: 500 as const, style: "normal" as const },
-  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500; style: "normal" | "italic" }[];
+    display && { name: "Archivo", data: display, weight: 500 as const, style: "normal" as const },
+    mono && { name: "IBM Plex Mono", data: mono, weight: 400 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 400; style: "normal" }[];
 
   // If no font could be loaded (offline build), Satori cannot render text, so
   // fall back to a text-free branded card rather than throwing a 500.
@@ -115,21 +86,17 @@ export async function renderOgImage({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "#F4EFE0",
-            position: "relative",
+            background: INK,
           }}
         >
-          <Splotches />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={LEAF_DATA_URI} width={460} height={460} alt="" />
+          <Logo size={160} />
         </div>
       ),
       OG_SIZE,
     );
   }
 
-  const headFamily = "Cormorant";
-  const bodyFamily = body ? "EB Garamond" : "Cormorant";
+  const monoFamily = mono ? "IBM Plex Mono" : "Archivo";
 
   return new ImageResponse(
     (
@@ -138,63 +105,88 @@ export async function renderOgImage({
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
+          flexDirection: "column",
           justifyContent: "space-between",
-          padding: "72px 84px",
-          background: "#F4EFE0",
-          fontFamily: bodyFamily,
+          padding: "64px 72px 56px",
+          background: INK,
+          color: BONE,
+          fontFamily: "Archivo",
           position: "relative",
         }}
       >
-        <Splotches />
+        {/* Hairline frame */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 24,
+            border: `1px solid rgba(255, 103, 55, 0.45)`,
+          }}
+        />
 
-        <div style={{ display: "flex", flexDirection: "column", maxWidth: 720 }}>
-          <div
-            style={{
-              fontSize: 22,
-              letterSpacing: 6,
-              textTransform: "uppercase",
-              color: "#5E6E52",
-            }}
-          >
-            {eyebrow}
-          </div>
+        <div
+          style={{
+            display: "flex",
+            fontFamily: monoFamily,
+            fontSize: 22,
+            letterSpacing: 4,
+            textTransform: "uppercase",
+            color: ORANGE,
+          }}
+        >
+          {eyebrow}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            fontSize: 108,
+            lineHeight: 0.95,
+            letterSpacing: -4,
+            fontWeight: 500,
+            maxWidth: 1000,
+          }}
+        >
+          {title}
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 36 }}>
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
-              marginTop: 24,
-              fontFamily: headFamily,
-              fontSize: 92,
-              lineHeight: 1.02,
-              color: "#2E4229",
+              fontFamily: monoFamily,
+              fontSize: 24,
+              lineHeight: 1.5,
+              maxWidth: 880,
+              color: BONE,
+              opacity: 0.9,
             }}
           >
-            <span>{titleLead}</span>
-            {titleAccent ? (
-              <span style={{ fontStyle: "italic", color: "#4A6B3A" }}>
-                &nbsp;{titleAccent}
-              </span>
-            ) : null}
-          </div>
-          <div style={{ marginTop: 28, fontSize: 30, color: "#48513c", lineHeight: 1.4 }}>
             {subtitle}
           </div>
           <div
             style={{
-              marginTop: 40,
-              fontFamily: headFamily,
-              fontSize: 34,
-              letterSpacing: 2,
-              color: "#2E4229",
+              display: "flex",
+              alignItems: "center",
+              gap: 20,
+              paddingTop: 28,
+              borderTop: `1px solid rgba(255, 103, 55, 0.45)`,
             }}
           >
-            Constantin Chirila
+            <Logo size={44} />
+            <div
+              style={{
+                display: "flex",
+                fontSize: 24,
+                letterSpacing: 4,
+                textTransform: "uppercase",
+                fontWeight: 500,
+              }}
+            >
+              Constantin{" "}
+              <span style={{ color: ORANGE, marginLeft: 12 }}>Chirila</span>
+            </div>
           </div>
         </div>
-
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={LEAF_DATA_URI} width={420} height={420} alt="" />
       </div>
     ),
     { ...OG_SIZE, fonts },

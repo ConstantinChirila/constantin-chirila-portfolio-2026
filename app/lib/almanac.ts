@@ -8,9 +8,10 @@ const ALMANAC_DIR = path.join(process.cwd(), "content", "almanac");
 // traversal (e.g. "../../etc/passwd") before any value reaches the filesystem.
 const SLUG_RE = /^[a-z0-9-]+$/;
 
-// Drafts are visible in development but excluded from production builds so
-// unfinished posts are never listed or served publicly.
-const includeDrafts = process.env.NODE_ENV !== "production";
+// Drafts are excluded everywhere for now, so /almanac shows its coming-soon
+// state until a post is published (draft: false). Flip to
+// `process.env.NODE_ENV !== "production"` to preview drafts in development.
+const includeDrafts = false;
 
 export interface PostMeta {
   slug: string;
@@ -21,6 +22,8 @@ export interface PostMeta {
   sort: string;
   category: string;
   excerpt: string;
+  /** Estimated reading time, e.g. "5 min read" (~200 wpm). */
+  readTime: string;
   draft: boolean;
 }
 
@@ -34,6 +37,7 @@ function readSlug(slug: string): Post | undefined {
   if (!fs.existsSync(file)) return undefined;
   const raw = fs.readFileSync(file, "utf8");
   const { data, content } = matter(raw);
+  const words = content.trim().split(/\s+/).length;
   return {
     slug,
     title: String(data.title ?? slug),
@@ -41,6 +45,7 @@ function readSlug(slug: string): Post | undefined {
     sort: String(data.sort ?? data.date ?? ""),
     category: String(data.category ?? ""),
     excerpt: String(data.excerpt ?? ""),
+    readTime: `${Math.max(1, Math.round(words / 200))} min read`,
     draft: Boolean(data.draft ?? false),
     content,
   };
