@@ -143,6 +143,7 @@ svg {
 
 .btn-ink-outline {
   border: 1px solid var(--ink);
+  background: var(--bone);
   padding: 14px 25px 13px;
 }
 
@@ -164,7 +165,8 @@ svg {
 
 .btn-orange-outline {
   border: 1px solid var(--orange);
-  color: var(--bone-on-dark);
+  background: var(--bone);
+  color: var(--ink);
   padding: 15px 25px 14px;
 }
 
