@@ -31,10 +31,10 @@ export const toolkit: ToolkitRow[] = [
     label: "Languages & core",
     chips: [
       "TypeScript",
-      "JavaScript ES2023+",
       "React",
       "Next.js",
       "Node.js",
+      "JavaScript ES2023+",
       "CSS3 · SASS",
       "Python",
       "Kubernetes (basics)",
@@ -43,18 +43,20 @@ export const toolkit: ToolkitRow[] = [
   {
     index: "B",
     label: "State & data",
-    chips: ["React Query", "Context API", "Redux", "GraphQL", "REST APIs", "MongoDB"],
+    chips: [
+      "React Query",
+      "Context API",
+      "Redux",
+      "GraphQL",
+      "REST APIs",
+      "PostgreSQL",
+      "MongoDB",
+    ],
   },
   {
     index: "C",
     label: "Testing & quality",
-    chips: [
-      "Jest",
-      "React Testing Library",
-      "Playwright",
-      "Cypress",
-      "TDD: unit · integration · E2E",
-    ],
+    chips: ["Jest", "React Testing Library", "Playwright", "Cypress", "TDD"],
   },
   {
     index: "D",
@@ -63,10 +65,10 @@ export const toolkit: ToolkitRow[] = [
       "Git",
       "GitHub Actions CI/CD",
       "Vite",
-      "Webpack",
-      "Lighthouse · Web Vitals",
-      "WCAG",
+      "Lighthouse",
       "Storybook",
+      "Webpack",
+      "WCAG",
       "Figma",
     ],
   },
@@ -79,6 +81,7 @@ export const toolkit: ToolkitRow[] = [
       "Responsive & accessible UI",
       "AI-assisted development",
       "Agents & local LLM workflows",
+      "Accessibility",
     ],
   },
 ];
@@ -172,7 +175,8 @@ export const work: WorkEntry[] = [
   {
     no: "06",
     client: "Rapticore",
-    scope: "Cybersecurity observability UI: led 4 engineers, design + front end",
+    scope:
+      "Cybersecurity observability UI: led 4 engineers, design + front end",
     type: "Startup",
     stack: "React · TS",
     year: "2019–22",
