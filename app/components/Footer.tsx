@@ -22,7 +22,7 @@ export default function Footer() {
           <h2>{contact.title}</h2>
           <div className="contact-acts">
             <EmailLink className="btn btn-orange" subject="Something worth building">
-              Email me <span className="arrow">↗</span>
+              Email me
             </EmailLink>
             <Link href="/cv" className="btn btn-orange-outline">
               Curriculum vitae

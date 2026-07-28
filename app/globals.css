@@ -385,7 +385,7 @@ svg {
 
 .hero {
   position: relative;
-  background: var(--orange);
+  background: var(--bone);
   color: var(--ink);
   border-bottom: 1px solid var(--ink);
   overflow: clip;
@@ -480,7 +480,7 @@ svg {
   width: 188px;
   height: 188px;
   border-radius: 50%;
-  background: var(--orange);
+  background: var(--bone);
   border: 1px solid var(--ink);
   display: flex;
   flex-direction: column;
@@ -493,7 +493,7 @@ svg {
 .hero-emblem .diamond {
   width: 18px;
   height: 18px;
-  background: var(--ink);
+  background: var(--orange);
   display: block;
   transform: rotate(45deg);
 }
@@ -1281,7 +1281,7 @@ a.writing-card:hover {
 
 .page-hero {
   position: relative;
-  background: var(--orange);
+  background: var(--bone);
   color: var(--ink);
   padding: 88px var(--pad-x) 56px;
   border-bottom: 1px solid var(--ink);
