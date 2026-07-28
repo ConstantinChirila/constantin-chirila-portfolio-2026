@@ -42,8 +42,8 @@ export default function Home() {
               </div>
             </div>
             <div className="hero-acts">
-              <EmailLink className="btn btn-orange" subject="Starting a project">
-                Start a project
+              <EmailLink className="btn btn-orange" subject="Working together">
+                Work with me
               </EmailLink>
               <Link href="/cv" className="btn btn-ink-outline">
                 Curriculum vitae
