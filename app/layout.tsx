@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description:
-      "UK-based front-end engineer with a designer's eye. React, TypeScript, and the backend when it's needed.",
+      "UK-based frontend engineer with a designer's eye. React, TypeScript, and the backend when it's needed.",
   },
   // Favicon and OG images are provided by the app/icon.svg and
   // opengraph-image.tsx file conventions (root + per route).
@@ -46,7 +46,7 @@ const jsonLd = {
       "@type": "Person",
       name: siteName,
       url: siteUrl,
-      jobTitle: "Front-end engineer & designer",
+      jobTitle: "Frontend engineer & designer",
       description: siteDescription,
       address: {
         "@type": "PostalAddress",

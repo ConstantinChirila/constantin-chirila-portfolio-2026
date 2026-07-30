@@ -110,7 +110,5 @@ Both are wired through Next's file conventions.
 
 - [ ] Write and publish the first notes (`content/almanac/`, currently drafts).
 - [ ] Confirm the David Hobbs testimonial edit ("professional" for "designer").
-- [ ] Export the recoloured (orange) CV to PDF and replace
-      `public/constantin-chirila-cv.pdf` (still the green version).
 - [ ] Consider per-project case-study pages for the work index (rows are
       static for now).

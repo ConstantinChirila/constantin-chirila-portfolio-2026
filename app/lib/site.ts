@@ -7,7 +7,7 @@ export const siteUrl = (
 
 export const siteName = "Constantin Chirila";
 
-export const siteTitle = "Constantin Chirila · Front-end engineer & designer";
+export const siteTitle = "Constantin Chirila · Frontend engineer & designer";
 
 export const siteDescription =
-  "Constantin Chirila is a UK-based front-end engineer with a strong design and UX background, building fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it.";
+  "Constantin Chirila is a UK-based frontend engineer with a strong design and UX background, building fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it.";

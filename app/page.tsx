@@ -105,7 +105,7 @@ export default function Home() {
         <div className="section-head">
           <h2>Three disciplines. One build.</h2>
           <p className="caption">
-            Front-end at the centre, design underneath it, backend within reach.
+            Frontend at the centre, design underneath it, backend within reach.
           </p>
         </div>
         <div className="disc-grid">
@@ -133,7 +133,7 @@ export default function Home() {
       <section className="section-dark work" id="work">
         <div className="section-head">
           <h2>Things I&apos;ve shipped.</h2>
-          <span className="caption">Eight engagements · 2015–present</span>
+          <span className="caption">Eight engagements · 2015–2026</span>
         </div>
         {/* Divs styled as a grid, with table semantics for assistive tech.
             The header row is display:none under 780px, where rows stack. */}

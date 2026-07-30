@@ -11,10 +11,10 @@ export const nav = {
 };
 
 export const hero = {
-  eyebrow: "Front-end engineer · Design & UX · Est. 2013",
+  eyebrow: "Frontend engineer · Design & UX · Est. 2013",
   title: "From idea to shipped.",
   intro:
-    "I'm a front-end engineer with a designer's eye. I build fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it. Design is where I started, so I care how the whole thing feels, not just how it works.",
+    "I'm a frontend engineer with a designer's eye. I build fast, accessible interfaces in React and TypeScript, and the backend to run them when a project needs it. Design is where I started, so I care how the whole thing feels, not just how it works.",
   plateLabel: "3 disciplines → 1 build",
 };
 
@@ -24,20 +24,20 @@ export interface ToolkitRow {
   chips: string[];
 }
 
-// Content mirrors the CV skill groups (app/data/cv.ts), phrased for the toolkit table.
+// Content mirrors the CV skill groups (app/data/cv.ts, sourced from the CV
+// PDF), phrased for the toolkit table.
 export const toolkit: ToolkitRow[] = [
   {
     index: "A",
     label: "Languages & core",
     chips: [
       "TypeScript",
+      "JavaScript ES2023+",
       "React",
       "Next.js",
       "Node.js",
-      "JavaScript ES2023+",
-      "CSS3 · SASS",
+      "HTML5 · CSS3 · SASS",
       "Python",
-      "Kubernetes (basics)",
     ],
   },
   {
@@ -48,15 +48,20 @@ export const toolkit: ToolkitRow[] = [
       "Context API",
       "Redux",
       "GraphQL",
-      "REST APIs",
-      "PostgreSQL",
       "MongoDB",
+      "REST APIs",
     ],
   },
   {
     index: "C",
     label: "Testing & quality",
-    chips: ["Jest", "React Testing Library", "Playwright", "Cypress", "TDD"],
+    chips: [
+      "Jest",
+      "React Testing Library",
+      "Playwright",
+      "Cypress",
+      "TDD: unit · integration · E2E",
+    ],
   },
   {
     index: "D",
@@ -64,24 +69,24 @@ export const toolkit: ToolkitRow[] = [
     chips: [
       "Git",
       "GitHub Actions CI/CD",
-      "Vite",
-      "Lighthouse",
-      "Storybook",
       "Webpack",
+      "Vite",
+      "Lighthouse · Web Vitals",
       "WCAG",
+      "Storybook",
       "Figma",
+      "Photoshop",
+      "Kubernetes (working knowledge)",
     ],
   },
   {
     index: "E",
     label: "Practices",
     chips: [
-      "Component architecture",
-      "Design systems",
-      "Responsive & accessible UI",
+      "Modular / component architecture",
+      "Responsive design",
       "AI-assisted development",
-      "Agents & local LLM workflows",
-      "Accessibility",
+      "Claude Code · local LLM workflows · agents",
     ],
   },
 ];
@@ -100,7 +105,7 @@ export const disciplines: Discipline[] = [
   {
     plate: "spiral",
     plateLabel: "01 / VISIBLE LAYER",
-    title: "Front-end engineering.",
+    title: "Frontend engineering.",
     body: "The part people actually touch: fast, accessible interfaces in React and TypeScript, with clean code and design systems that hold up as they grow.",
     chips: ["React", "TypeScript", "Next.js"],
   },
@@ -115,7 +120,7 @@ export const disciplines: Discipline[] = [
     plate: "nested",
     plateLabel: "03 / SUBSTRUCTURE",
     title: "Backend when needed.",
-    body: "When a project needs the whole thing, I build the APIs and systems behind the front-end too, taking it from idea to something running, on my own.",
+    body: "When a project needs the whole thing, I build the APIs and systems behind the frontend too, taking it from idea to something running, on my own.",
     chips: ["Node", "Postgres", "APIs"],
   },
 ];
@@ -135,7 +140,7 @@ export const work: WorkEntry[] = [
   {
     no: "01",
     client: "Diagrid",
-    scope: "Conductor & Catalyst: front-end architecture, workflow visualiser",
+    scope: "Conductor & Catalyst: frontend architecture, workflow visualiser",
     type: "Startup",
     stack: "React · Next.js · TS · Node.js · Python · k8s · Cypress · CI/CD",
     year: "2022–26",
@@ -151,7 +156,7 @@ export const work: WorkEntry[] = [
   {
     no: "03",
     client: "Jetstack",
-    scope: "Secure Platform front end, docs as one Next.js app",
+    scope: "Secure Platform frontend, docs as one Next.js app",
     type: "Startup",
     stack: "React · TS · Playwright · Next.js · k8s",
     year: "2021–22",
@@ -159,15 +164,15 @@ export const work: WorkEntry[] = [
   {
     no: "04",
     client: "Cert Manager",
-    scope: "Website & documentation front end",
+    scope: "Website & documentation frontend",
     type: "OSS",
     stack: "Next.js · MDX",
     year: "2022",
   },
   {
     no: "05",
-    client: "Purplebricks",
-    scope: "Search, listings, refunds app across micro-front-ends",
+    client: "PurpleBricks",
+    scope: "Search, listings, refunds app across micro-frontends",
     type: "Scale-up",
     stack: "React · TS · Next.js · Storybook · Cypress · React Query",
     year: "2019–21",
@@ -176,7 +181,7 @@ export const work: WorkEntry[] = [
     no: "06",
     client: "Rapticore",
     scope:
-      "Cybersecurity observability UI: led 4 engineers, design + front end",
+      "Cybersecurity observability UI: led 4 engineers, design + frontend",
     type: "Startup",
     stack: "React · TS",
     year: "2019–22",
@@ -184,7 +189,7 @@ export const work: WorkEntry[] = [
   {
     no: "07",
     client: "Mention Me",
-    scope: "Referral front ends for UK retail brands",
+    scope: "Referral frontends for UK retail brands",
     type: "Scale-up",
     stack: "Design · JS · CSS · HTML",
     year: "2016–19",
@@ -230,7 +235,7 @@ export const method: MethodStage[] = [
   {
     numeral: "III",
     title: "Build",
-    body: "Short cycles, front-end first, with working software to see early and often.",
+    body: "Short cycles, frontend first, with working software to see early and often.",
   },
   {
     numeral: "IV",

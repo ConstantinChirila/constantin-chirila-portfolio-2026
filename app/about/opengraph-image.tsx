@@ -9,6 +9,6 @@ export default function OpengraphImage() {
     eyebrow: "Profile · British / Romanian",
     title: "Engineer, by way of design.",
     subtitle:
-      "A Romanian-born British front-end engineer with a designer's background, building for the web since 2013.",
+      "A Romanian-born British frontend engineer with a designer's background, building for the web since 2013.",
   });
 }

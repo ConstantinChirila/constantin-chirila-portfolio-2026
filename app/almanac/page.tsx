@@ -6,7 +6,7 @@ import { getAllPosts } from "@/app/lib/almanac";
 export const metadata: Metadata = {
   title: "Notes",
   description:
-    "Notes on front-end engineering, design systems, and performance by Constantin Chirila.",
+    "Notes on frontend engineering, design systems, and performance by Constantin Chirila.",
   alternates: { canonical: "/almanac" },
 };
 
@@ -19,7 +19,7 @@ export default function AlmanacPage() {
         <span className="eyebrow">Writing</span>
         <h1>Notes.</h1>
         <p className="caption">
-          Working notes on front-end engineering, design systems, and
+          Working notes on frontend engineering, design systems, and
           performance.
         </p>
       </section>

@@ -9,6 +9,6 @@ export default function OpengraphImage() {
     eyebrow: "Writing · Notes",
     title: "Notes.",
     subtitle:
-      "Working notes on front-end engineering, design systems, and performance.",
+      "Working notes on frontend engineering, design systems, and performance.",
   });
 }

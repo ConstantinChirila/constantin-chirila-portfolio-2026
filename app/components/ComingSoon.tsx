@@ -14,7 +14,7 @@ export default function ComingSoon({
   className,
   index = "000 / Notes",
   title = "Coming soon.",
-  dek = "Working notes on front-end engineering, design systems, and performance. Publishing here soon.",
+  dek = "Working notes on frontend engineering, design systems, and performance. Publishing here soon.",
   foot,
 }: ComingSoonProps) {
   return (

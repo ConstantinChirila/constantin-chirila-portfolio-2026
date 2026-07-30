@@ -6,7 +6,7 @@ import { values } from "@/app/data/content";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Constantin Chirila is a Romanian-born British front-end engineer with a designer's background, building interfaces for the web in React and TypeScript, and the backend when a project needs it.",
+    "Constantin Chirila is a Romanian-born British frontend engineer with a designer's background, building interfaces for the web in React and TypeScript, and the backend when a project needs it.",
   alternates: { canonical: "/about" },
 };
 
@@ -37,7 +37,7 @@ export default function AboutPage() {
           <div className="about-text">
             <p>
               <b>
-                I&apos;m Constantin, a Romanian-born British front-end engineer
+                I&apos;m Constantin, a Romanian-born British frontend engineer
                 with a designer&apos;s background.
               </b>{" "}
               I started in design and illustration over a decade ago, moved into
@@ -48,7 +48,7 @@ export default function AboutPage() {
             <p>
               Design is still where I think from, so I care about the details
               most people only notice when they&apos;re missing. When a project
-              needs more than the front-end, I build the backend and APIs to run
+              needs more than the frontend, I build the backend and APIs to run
               it too, which means I can take an app from first sketch to
               something running. What I leave behind is clean, documented code a
               team can own without me in the room.
