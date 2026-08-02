@@ -32,7 +32,7 @@ export default function CvPage() {
             download
             className="btn btn-bone-outline"
           >
-            Download PDF <span className="arrow">↓</span>
+            Download PDF
           </a>
         </div>
 

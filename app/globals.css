@@ -122,10 +122,6 @@ svg {
   background: none;
 }
 
-.btn .arrow {
-  font-family: var(--display);
-}
-
 /* Outlined buttons shave 1px off the prototype's padding on every edge so
    their 1px border keeps them the same outer height as the solid buttons.
    A deliberate deviation from the handoff's spacing. */

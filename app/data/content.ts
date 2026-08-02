@@ -180,8 +180,7 @@ export const work: WorkEntry[] = [
   {
     no: "06",
     client: "Rapticore",
-    scope:
-      "Cybersecurity observability UI: led 4 engineers, design + frontend",
+    scope: "Cybersecurity observability UI: led 4 engineers, design + frontend",
     type: "Startup",
     stack: "React · TS",
     year: "2019–22",
@@ -313,3 +312,5 @@ export const social = {
   // Email intentionally omitted here; it is base64-encoded in EmailLink so the
   // plaintext address never ships in the static HTML for bots to scan.
 };
+
+// test

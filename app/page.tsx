@@ -188,7 +188,7 @@ export default function Home() {
         <div className="section-head">
           <h2>Notes.</h2>
           <Link href="/almanac" className="btn btn-bone-outline">
-            All notes <span className="arrow">↗</span>
+            All notes
           </Link>
         </div>
         <div className="writing-grid">

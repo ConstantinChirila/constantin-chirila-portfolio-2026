@@ -65,7 +65,7 @@ export default function AboutPage() {
 
             <div className="about-cta">
               <Link href="/cv" className="btn btn-bone-outline">
-                Read the full CV <span className="arrow">→</span>
+                Read the full CV
               </Link>
             </div>
           </div>
