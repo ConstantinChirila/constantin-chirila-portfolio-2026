@@ -72,6 +72,14 @@ export default function RootLayout({
     <html lang="en" className={fontVariables}>
       <head>
         <meta name="supported-color-schemes" content="light" />
+        {/* Placed here (not in metadata.alternates) so per-page alternates
+            overrides can never drop the feed link. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Notes · Constantin Chirila"
+          href="/feed.xml"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

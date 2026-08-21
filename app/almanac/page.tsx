@@ -54,7 +54,9 @@ export default function AlmanacPage() {
                 </span>
                 {p.draft && <span className="cat">Draft</span>}
                 <span className="meta">
-                  <span className="date">{p.date}</span>
+                  <time className="date" dateTime={p.published}>
+                    {p.date}
+                  </time>
                   <span className="time">{p.readTime}</span>
                 </span>
               </Link>
