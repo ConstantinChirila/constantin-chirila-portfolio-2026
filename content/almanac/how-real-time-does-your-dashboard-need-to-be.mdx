@@ -1,0 +1,212 @@
+---
+title: "How real time does your dashboard actually need to be?"
+date: "2026 · 08"
+sort: "2026-08"
+category: "Engineering"
+excerpt: "Polling, long polling, SSE, streaming fetch, WebSockets, and WebTransport: one dashboard built six ways, and why SSE is what I would ship."
+draft: false
+---
+
+WebSockets have become the default answer whenever someone says “real time”. A dashboard needs live updates? WebSockets. Notifications? WebSockets. Someone changed a number three seconds ago and we would quite like to know about it? WebSockets again.
+
+I started wondering how often that is actually needed.
+
+So I took a fairly normal dashboard and built the update layer six different ways: polling, long polling, Server Sent Events, streaming `fetch()`, WebSockets and WebTransport.
+
+Nothing exotic was happening in the UI. Think jobs, deployments, orders or logs. Rows change throughout the day, the server produces updates regularly, and people looking at the dashboard expect to see those changes fairly quickly.
+
+What I cared about was much less interesting than protocol specs: how quickly updates arrived, what happened as the number of clients increased, how painful reconnects were, and how much code each approach made me own.
+
+## Polling was better than I expected
+
+The first version was deliberately boring:
+
+```javascript
+setInterval(async () => {
+  const data = await fetch("/api/dashboard")
+  updateDashboard(await data.json())
+}, 2000)
+```
+
+There is a lot to like about this.
+
+There is no connection state. No heartbeat. No special reconnect logic. If the request fails, another one happens two seconds later.
+
+The problem is simple maths.
+
+With 1,000 users polling every two seconds, that is around **500 requests per second** even when nothing changed.
+
+The delay is also tied directly to the interval. With a two second poll, an update might appear almost immediately or nearly two seconds later. Roughly speaking, the average is around one second.
+
+Drop the interval to 500ms and the dashboard feels much more responsive. It also turns those 500 requests per second into 2,000.
+
+That tradeoff is so obvious that polling sometimes gets dismissed too quickly. If the product only needs to update every five or ten seconds, I am not convinced replacing it with a persistent connection buys much.
+
+For a lot of admin dashboards, polling may actually be the right answer.
+
+## Long polling felt like an awkward middle ground
+
+Next I kept the normal HTTP request but stopped returning immediately.
+
+The browser asks for updates and the server holds the request open until something changes. Once it responds, the browser immediately opens another request.
+
+This gets rid of most of the pointless empty polling traffic and updates can arrive almost immediately.
+
+It works.
+
+It also made me wonder why I was doing it.
+
+The request is no longer really behaving like a normal request. The server is keeping connections open, the client needs to start another one after every response, and I now have more connection state to think about.
+
+At that point, using something designed to stream events started to look simpler.
+
+Long polling still has a place if you are stuck behind infrastructure that behaves badly with other persistent connections. For a new application, though, it would not be high on my list.
+
+## SSE was the first version where very little felt missing
+
+The SSE version was almost annoyingly small:
+
+```javascript
+const events = new EventSource("/api/dashboard/events")
+
+events.onmessage = event => {
+  updateDashboard(JSON.parse(event.data))
+}
+```
+
+One connection stays open and the server writes events into it whenever something changes.
+
+There is no polling interval, so there is no built in delay waiting for the next request. There are also no repeated empty requests while the dashboard sits idle.
+
+The part I liked most only became obvious when deliberately breaking the connection.
+
+`EventSource` reconnects by itself.
+
+That sounds like a small convenience until you compare it with the amount of reconnect code the other options start collecting.
+
+SSE can also attach an ID to each event. When the browser reconnects, it can send the last event ID it received, which gives the server a way to replay anything missed.
+
+You still need to design that replay behaviour on the server, but the protocol already gives you a useful piece of it.
+
+The obvious objection is that SSE only sends data from server to browser.
+
+For this dashboard, I struggled to care.
+
+If someone clicks “cancel job”, I can still do:
+
+```javascript
+fetch("/api/jobs/123/cancel", {
+  method: "POST"
+})
+```
+
+The command goes up through HTTP. The resulting state change comes back through SSE.
+
+Nothing requires both directions to share the same connection.
+
+## Streaming `fetch()` was flexible, but I immediately started rebuilding things
+
+A `fetch()` response can stay open too.
+
+Instead of waiting for the whole body, the client can read chunks from `response.body` as the server sends them.
+
+This is useful because you control almost everything. Headers, authentication, request method and stream format are all yours.
+
+It also became clear quite quickly what that control costs.
+
+Chunks do not necessarily match your messages. One JSON object might arrive across two chunks. Two messages might arrive in one chunk. The client needs buffering and framing logic before it can even start processing events.
+
+Then there is reconnecting.
+
+Then deciding where to resume.
+
+None of this is especially difficult, but for this specific use case I was writing code that `EventSource` had already solved.
+
+I would use streaming `fetch()` when the thing being returned naturally behaves like a stream. AI responses are an obvious example. For a plain server event feed, SSE felt cleaner.
+
+## WebSockets worked well, but the connection was the easy part
+
+Unsurprisingly, WebSockets handled the dashboard perfectly well.
+
+One connection stays open. Updates arrive immediately. The browser can send messages back through the same connection.
+
+If the product genuinely has a lot of traffic going in both directions, that matters.
+
+The interesting part was what happened once I stopped thinking about the happy path.
+
+A WebSocket reconnecting does not mean the application recovered.
+
+Imagine the client receives event `381`, loses its network connection, reconnects thirty seconds later and starts receiving events again.
+
+What happened to `382` through `417`?
+
+Now the system needs something like:
+
+<FlowDiagram
+  nodes={[
+    { label: "connect", note: "authenticate · subscribe" },
+    { label: "receive event 381" },
+    { label: "connection dies", tone: "accent" },
+    { label: "reconnect", note: "authenticate · subscribe" },
+    { label: "request events after 381" },
+    { label: "continue" },
+  ]}
+  caption="Recovery is your code, not the protocol's"
+/>
+
+You may also need heartbeats to spot dead connections, retry delays so every browser does not reconnect at once, and some way to stop duplicate messages causing duplicate work.
+
+None of those problems make WebSockets bad.
+
+They just made me realise that **WebSockets solve transport, not state recovery**.
+
+For this dashboard, the bidirectional connection was not doing enough to justify the extra work.
+
+## WebTransport never really had a chance
+
+I also looked at WebTransport.
+
+It runs over HTTP/3 and supports several ways of moving data, including streams and datagrams. Datagrams are particularly interesting when old data can simply be dropped instead of retransmitted.
+
+That could be useful for multiplayer games, remote control, media, telemetry or anything sending lots of independent time sensitive messages.
+
+My dashboard sends JSON saying a job changed from `running` to `completed`.
+
+I could not find a WebTransport feature that improved that.
+
+It would have meant adopting a more complex stack to solve a problem I did not have, so I stopped there.
+
+## What I would actually ship
+
+The rough comparison ended up looking like this:
+
+| Approach | Server traffic | Update delay | Reconnect | Client complexity |
+| --- | --- | --- | --- | --- |
+| Polling every 2s | ~500 req/sec at 1,000 clients | ~1s average | Very easy | Very low |
+| Long polling | Low request rate | Near immediate | Manual | Medium |
+| SSE | One open connection per client | Near immediate | Built in | Low |
+| Streaming fetch | One open connection per client | Near immediate | Manual | Medium |
+| WebSocket | One open connection per client | Near immediate | Manual | Medium to high |
+| WebTransport | Persistent connection | Near immediate | Manual | High |
+
+For this dashboard, I would ship **SSE**.
+
+Not because SSE is somehow better than WebSockets, but because the browser is mostly listening.
+
+Commands can use normal HTTP. Updates can come back through one event stream. Reconnecting comes mostly for free, and the code stays small enough that I can still understand the whole path without opening six files.
+
+If the dashboard only needed updates every five or ten seconds, I would probably use polling instead.
+
+If I were building something collaborative where browsers constantly send and receive messages, WebSockets would move much higher up the list.
+
+And WebTransport would need to solve a very specific problem before I introduced it.
+
+That was probably the useful bit from building all six versions. I started with:
+
+**Which real time protocol should this dashboard use?**
+
+I ended up with a better question:
+
+**How real time does this dashboard actually need to be?**
+
+For quite a few products, the answer is “less than you think”.

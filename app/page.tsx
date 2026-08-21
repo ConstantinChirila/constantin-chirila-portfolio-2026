@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ComingSoon from "./components/ComingSoon";
 import EmailLink from "./components/EmailLink";
+import { getAllPosts } from "./lib/almanac";
 import { Lattice, Nested, Rosette, Spiral, Waves } from "./components/plates";
 import { ORANGE } from "./lib/palette";
 import {
@@ -28,6 +29,8 @@ const disciplinePlates: Record<DisciplinePlate, React.ReactNode> = {
 };
 
 export default function Home() {
+  const posts = getAllPosts().slice(0, 3);
+
   return (
     <>
       {/* ---- Hero (orange) ---- */}
@@ -192,22 +195,12 @@ export default function Home() {
           </Link>
         </div>
         <div className="writing-grid">
-          {/* Coming-soon placeholder. When the first posts are published
-              (draft: false in content/almanac/*.mdx), delete this card and
-              restore the mapped cards below. */}
-          <ComingSoon
-            className="writing-card writing-soon"
-            foot={["In progress", "Check back"]}
-          />
-
-          {/* To publish real posts:
-              1. Set draft: false in the post frontmatter.
-              2. Re-add at the top of this file:
-                   import { getAllPosts } from "./lib/almanac";
-                 and inside Home():
-                   const posts = getAllPosts().slice(0, 3);
-              3. Replace the ComingSoon card above with:
-
+          {posts.length === 0 && (
+            <ComingSoon
+              className="writing-card writing-soon"
+              foot={["In progress", "Check back"]}
+            />
+          )}
           {posts.map((p, i) => (
             <Link
               href={`/almanac/${p.slug}`}
@@ -215,9 +208,7 @@ export default function Home() {
               key={p.slug}
             >
               <div className="card-top">
-                <span>
-                  {String(i + 1).padStart(3, "0")} / {p.category}
-                </span>
+                <span>{String(i + 1).padStart(3, "0")}</span>
                 <span className="ring" aria-hidden="true" />
               </div>
               <div className="card-mid">
@@ -230,7 +221,6 @@ export default function Home() {
               </div>
             </Link>
           ))}
-          */}
         </div>
       </section>
 

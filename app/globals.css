@@ -1590,13 +1590,19 @@ a.writing-card:hover {
 
 /* Notes (writing index + article) */
 
+/* Four tracks: no · title/excerpt · draft badge (dev preview only) · meta.
+   The badge track collapses to 0 when the badge is absent. */
 .notes-list .entry {
   display: grid;
-  grid-template-columns: 52px minmax(0, 1.6fr) minmax(0, 1fr) 120px;
+  grid-template-columns: 52px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 18px;
   padding: 20px 8px;
   border-bottom: 1px solid var(--hair-ink-25);
+}
+
+.notes-list .entry .meta {
+  grid-column: -2;
 }
 
 .notes-list a.entry:hover {
@@ -1611,9 +1617,23 @@ a.writing-card:hover {
   opacity: 0.65;
 }
 
+.notes-list .entry .main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .notes-list .entry .title {
   font-size: 24px;
   letter-spacing: -0.02em;
+}
+
+.notes-list .entry .dek {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  opacity: 0.7;
 }
 
 .notes-list .entry .cat {
@@ -1623,11 +1643,25 @@ a.writing-card:hover {
   text-transform: uppercase;
 }
 
+.notes-list .entry .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: right;
+}
+
 .notes-list .entry .date {
   font-family: var(--mono);
   font-size: 12px;
-  text-align: right;
   opacity: 0.85;
+}
+
+.notes-list .entry .time {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
 }
 
 .notes-empty {
@@ -1687,8 +1721,23 @@ a.writing-card:hover {
   border-bottom-color: var(--ink);
 }
 
+/* Post pages centre the hero; other page heroes stay left-aligned. */
+.article-hero {
+  text-align: center;
+}
+
+.article-hero h1 {
+  max-width: 1980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.article-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
 .article-prose {
-  max-width: 720px;
   margin-top: 40px;
 }
 
@@ -1770,6 +1819,221 @@ a.writing-card:hover {
   border-left: 1px solid var(--ink);
   padding-left: 22px;
   margin: 0 0 20px;
+}
+
+.article-prose .table-scroll {
+  overflow-x: auto;
+  margin: 0 0 20px;
+}
+
+.article-prose table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.article-prose th,
+.article-prose td {
+  border-bottom: 1px solid var(--hair-60);
+  padding: 10px 18px 10px 0;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.article-prose th {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--ink);
+}
+
+.article-prose pre {
+  margin: 0 0 20px;
+}
+
+/* rehype-pretty-code wraps highlighted blocks in a figure. */
+.article-prose figure[data-rehype-pretty-code-figure] {
+  margin: 0 0 20px;
+}
+
+.article-prose figure[data-rehype-pretty-code-figure] pre {
+  margin: 0;
+}
+
+/* Article diagrams (app/components/diagrams.tsx) */
+
+.article-prose .diagram {
+  margin: 30px 0 34px;
+}
+
+.diagram-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.diagram-node {
+  border: 1px solid var(--ink);
+  padding: 11px 26px 12px;
+  min-width: 200px;
+  text-align: center;
+}
+
+.diagram-node.is-accent {
+  border: 1px dashed var(--orange);
+}
+
+.diagram-node.is-accent .diagram-node-label {
+  color: var(--orange);
+}
+
+.diagram-node-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.diagram-node-note {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  margin-top: 4px;
+  opacity: 0.6;
+}
+
+.diagram-edge {
+  position: relative;
+  display: flex;
+  padding: 3px 0;
+}
+
+.diagram-edge-label {
+  position: absolute;
+  left: calc(50% + 16px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+/* Horizontal flows */
+
+.diagram-row {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
+  /* Room for edge labels hanging below the arrows. */
+  padding-bottom: 4px;
+}
+
+.diagram-row .diagram-node {
+  min-width: 0;
+  padding: 11px 20px 12px;
+  white-space: nowrap;
+}
+
+.diagram-edge.is-row {
+  padding: 0 4px;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Labelled gaps widen so the label clears the neighbouring boxes. */
+.diagram-edge.is-row.has-label {
+  min-width: 104px;
+}
+
+.diagram-edge.is-row .diagram-edge-label {
+  left: 50%;
+  top: calc(50% + 10px);
+  transform: translate(-50%, 0);
+}
+
+.diagram-scroll {
+  overflow-x: auto;
+}
+
+.diagram-svg {
+  display: block;
+  width: 100%;
+  min-width: 560px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.diagram-svg text {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  fill: var(--ink);
+}
+
+.diagram-caption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 16px;
+  opacity: 0.65;
+}
+
+.diagram-card {
+  border: 1px solid var(--ink);
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 14px 22px 18px;
+}
+
+.diagram-card-title {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--hair-60);
+}
+
+.diagram-card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.article-prose .diagram-card-list li {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  padding-left: 18px;
+  position: relative;
+}
+
+.article-prose .diagram-card-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 8px;
+  height: 1px;
+  background: var(--orange);
 }
 
 /* 404 */
@@ -2032,9 +2296,18 @@ a.writing-card:hover {
     display: none;
   }
 
+  .notes-list .entry .main {
+    grid-column: 1 / -1;
+  }
+
   .notes-list .entry .title {
     font-size: 20px;
-    grid-column: 1 / -1;
+  }
+
+  .notes-list .entry .meta {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12px;
   }
 
   .values-grid {

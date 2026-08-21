@@ -30,11 +30,15 @@ export default function AlmanacPage() {
             {posts.map((p, i) => (
               <Link className="entry" href={`/almanac/${p.slug}`} key={p.slug}>
                 <span className="no">{String(i + 1).padStart(2, "0")}</span>
-                <span className="title">{p.title}</span>
-                <span className="cat">
-                  {p.draft ? "Draft" : p.category}
+                <span className="main">
+                  <span className="title">{p.title}</span>
+                  <span className="dek">{p.excerpt}</span>
                 </span>
-                <span className="date">{p.date}</span>
+                {p.draft && <span className="cat">Draft</span>}
+                <span className="meta">
+                  <span className="date">{p.date}</span>
+                  <span className="time">{p.readTime}</span>
+                </span>
               </Link>
             ))}
           </div>
