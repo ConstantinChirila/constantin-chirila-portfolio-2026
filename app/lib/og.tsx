@@ -35,6 +35,8 @@ interface OgOptions {
   eyebrow: string;
   title: string;
   subtitle: string;
+  /** Display size of the title; long post titles pass a smaller value. */
+  titleSize?: number;
 }
 
 const Logo = ({ size = 56 }: { size?: number }) => (
@@ -63,6 +65,7 @@ export async function renderOgImage({
   eyebrow,
   title,
   subtitle,
+  titleSize = 108,
 }: OgOptions): Promise<ImageResponse> {
   const [display, mono] = await Promise.all([
     loadGoogleFont("Archivo", 500),
@@ -139,9 +142,9 @@ export async function renderOgImage({
         <div
           style={{
             display: "flex",
-            fontSize: 108,
-            lineHeight: 0.95,
-            letterSpacing: -4,
+            fontSize: titleSize,
+            lineHeight: 0.98,
+            letterSpacing: titleSize > 80 ? -4 : -2,
             fontWeight: 500,
             maxWidth: 1000,
           }}

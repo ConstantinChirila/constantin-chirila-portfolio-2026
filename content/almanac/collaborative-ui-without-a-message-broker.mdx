@@ -2,16 +2,17 @@
 title: "Building collaborative UI without Redis, Kafka or a message broker"
 date: "2026 · 08"
 sort: "2026-08"
+published: "2026-08-21"
 category: "Engineering"
 excerpt: "One Durable Object per room instead of Redis Pub/Sub and a fleet of WebSocket servers: how Cloudflare's model simplifies collaborative UI, and what you trade away."
 draft: false
 ---
 
-Collaborative features tend to grow infrastructure very quickly.
+Collaborative features have a habit of pulling a surprising amount of infrastructure behind them.
 
-Imagine we are building a React app where several people can open the same board. When someone moves a card, edits a field or adds a comment, everyone else should see it almost at once.
+Say we are building a React app where several people can open the same board. Someone moves a card, edits a field or adds a comment, and everyone else should see it almost immediately.
 
-The usual design might look something like this:
+A fairly normal architecture might end up looking like this:
 
 <FlowDiagram
   direction="row"
@@ -25,15 +26,11 @@ The usual design might look something like this:
   caption="The usual fan-out stack"
 />
 
-Once the app grows, Redis might become Kafka, NATS or another message broker. We now have several systems involved just to answer a fairly simple question:
-
-**Someone changed the room. Who else needs to know?**
-
-Cloudflare Durable Objects offer a different answer.
+There is nothing wrong with that setup. But there is an interesting alternative with [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/).
 
 Give every room one object.
 
-That object owns the room's connections, receives its events and tells everyone else what changed.
+That object owns the connections for the room, receives its events and tells everyone else what changed.
 
 <FlowDiagram
   direction="row"
@@ -46,35 +43,33 @@ That object owns the room's connections, receives its events and tells everyone 
   caption="One coordinator per room"
 />
 
-That removes quite a lot of machinery.
+The interesting part is not that Durable Objects support WebSockets. Plenty of things support WebSockets.
 
-## Why WebSockets alone are not enough
+It is what we no longer need around them.
 
-A WebSocket gives you a connection between a browser and a server. It does not solve coordination.
+## WebSockets do not solve coordination
 
-Suppose Alice and Bob connect to server A while Charlie connects to server B.
+Imagine Alice and Bob connect to server A while Charlie connects to server B.
 
 Alice changes the title.
 
-Server A can easily tell Bob because both connections live inside the same process. Charlie is the problem. Server A needs some way to tell server B what happened.
+Server A can tell Bob immediately because it owns Bob's socket. Charlie is harder. Server A has no access to a WebSocket sitting inside another process.
 
-This is where Redis Pub/Sub, Kafka or another shared system often appears.
+So we introduce something shared:
 
 <RelayDiagram caption="Bob is easy. Charlie needs the relay." />
 
-Nothing is wrong with this design. For large systems it can be exactly what you want.
+Redis Pub/Sub works well for this. Kafka, NATS and other systems can solve versions of the same problem too.
 
-But it means your real time feature now relies on another service, another connection, another failure mode and another thing to monitor.
+But our collaborative feature now needs another service simply so one server can tell another server what happened.
 
-Durable Objects change where that coordination happens.
+With Durable Objects, we can move the boundary.
 
 ## One room, one object
 
-A Durable Object has a unique identity. Requests for that identity go back to the same object, and each object runs in one place at a time.
+Every Durable Object has a unique identity.
 
-Cloudflare specifically [recommends using them](https://developers.cloudflare.com/durable-objects/) around the thing that needs coordination. A chat room, game session or collaborative document are common examples.
-
-So instead of sending clients to any available WebSocket server, we route everyone editing `room_123` to the Durable Object for `room_123`.
+Instead of connecting users to any WebSocket server, we can route everyone viewing `room_123` to the Durable Object for `room_123`.
 
 Conceptually:
 
@@ -83,9 +78,7 @@ const room = env.ROOMS.getByName(roomId)
 return room.fetch(request)
 ```
 
-Inside that object we accept the WebSocket connection.
-
-Now Alice, Bob and Charlie all end up talking to the same coordinator.
+Now Alice, Bob and Charlie all talk to the same coordinator.
 
 When Alice sends:
 
@@ -97,43 +90,43 @@ When Alice sends:
 }
 ```
 
-the room object can validate the change, update its state and send an event to every connected client.
+the object can validate the message, update the room and broadcast the result to its connected clients.
 
-There is no need to publish the event somewhere and wait for another WebSocket server to consume it.
+There is no Redis channel to publish to. There is no second WebSocket server that needs to hear about it.
 
-The object already knows who is in the room.
+The object already owns the room.
 
-## What disappeared?
+## What actually disappeared?
 
-This is the part I find more interesting than the WebSocket code.
+This is where Durable Objects get interesting.
 
-We removed the need to answer several infrastructure questions.
+With a normal pool of WebSocket servers, we need answers to questions like:
 
-Which WebSocket server owns each connection?
+Which server owns each connection?
 
-How does server A send something to clients connected to server B?
+How does server A reach clients connected to server B?
 
-How do we subscribe servers to the right Redis channels?
+Which Redis channels should each server subscribe to?
 
-What happens when a server restarts?
+What happens when a server disappears?
 
 How do we clean up subscriptions?
 
 Do we need sticky sessions?
 
-How do we keep every WebSocket node aware of the same room?
+How do we stop several servers from making conflicting changes to the same room?
 
-The Durable Object becomes the boundary where those questions stop being distributed.
+When every room has one coordinator, several of those questions disappear.
 
-That is useful because coordination is often the hard part of these systems, not sending JSON through a socket.
+We have taken something spread across several machines and given it a clear owner.
 
-## The React side becomes boring
+That makes the code easier to reason about.
 
-Which is good.
+## React barely needs to know
 
-React does not need to know anything about Durable Objects.
+The React side is intentionally boring.
 
-It opens a WebSocket and responds to events.
+It opens a socket:
 
 ```javascript
 const socket = new WebSocket(`/rooms/${roomId}`)
@@ -147,7 +140,7 @@ socket.addEventListener("message", event => {
 })
 ```
 
-Local actions go the other way:
+And sends changes back:
 
 ```javascript
 socket.send(JSON.stringify({
@@ -157,31 +150,23 @@ socket.send(JSON.stringify({
 }))
 ```
 
-For a real app I would probably introduce event IDs, versions and some form of optimistic UI, but the important bit is that React does not become responsible for distributed state.
+I would add event IDs, versions and optimistic updates in a real application, but those are another problem.
 
-The server remains the authority for the room.
+Collaborative editing can get much harder once two people edit the same thing at the same time. You eventually need to think about server ordering, conflicting updates and, for some products, approaches such as CRDTs.
 
-## You can keep room state there too
+Durable Objects do not make that problem disappear. They just give you a useful place to solve it.
 
-Each Durable Object also has its own persistent storage.
+## The room can own data too
 
-That means the object coordinating a document can store data related to that document close to the code managing it. Cloudflare describes [this storage](https://developers.cloudflare.com/durable-objects/api/storage-api/) as strongly consistent and tied to the object.
+Durable Objects also have [persistent storage](https://developers.cloudflare.com/durable-objects/api/storage-api/) tied to the object.
 
-That does not mean your entire product database should suddenly live inside Durable Objects.
-
-Users, billing, reporting and data queried across many rooms may still belong in Postgres or another database.
-
-The useful boundary is narrower:
-
-**State that belongs to the coordination unit can live with the coordination unit.**
-
-For example:
+That means some state naturally belongs beside the coordinator:
 
 <StateCard
   title="room_123"
   items={[
+    "current version",
     "participants",
-    "current document version",
     "presence",
     "recent operations",
     "connected WebSockets",
@@ -189,72 +174,70 @@ For example:
   caption="State that lives with the coordinator"
 />
 
-That is much easier to reason about than several stateless servers attempting to reconstruct the same picture.
+I would not move an application's entire database into Durable Objects because of this.
 
-## It can even sleep
+Users, billing, reporting and anything that needs broad queries may still fit Postgres much better.
 
-There is another nice property here.
+The useful rule is simpler: data that only makes sense inside a room can often live with the room.
 
-Cloudflare's [WebSocket Hibernation API](https://developers.cloudflare.com/durable-objects/best-practices/websockets/) allows a Durable Object to leave memory while its clients remain connected. When another WebSocket message arrives, Cloudflare wakes the object again.
+## Hibernation changes the cost model
 
-So a quiet collaborative room does not necessarily require an active JavaScript process sitting around doing nothing.
+There is one detail I would not skip when building this for real: WebSocket hibernation.
 
-There is a catch.
+A normal WebSocket can keep a Durable Object in memory. Cloudflare bills Durable Object compute using wall clock duration while the object remains active or cannot hibernate.
 
-Anything important cannot exist only in memory because memory disappears when the object hibernates. Important room state needs to live in storage, and connection specific information can be attached to the WebSocket so it can be restored when the object wakes.
+That matters for collaborative apps because sockets can stay connected for hours while doing almost nothing.
 
-That is a very different programming model from keeping a Node process alive for days.
+Cloudflare provides a separate [WebSocket Hibernation API](https://developers.cloudflare.com/durable-objects/best-practices/websockets/). The client remains connected to Cloudflare, but the Durable Object can leave memory when nothing is happening. When another message arrives, Cloudflare wakes it again.
 
-## So what did we trade away?
+So you stop paying duration charges just because somebody left a browser tab open.
 
-We did not remove complexity. We moved it.
+The difference can be significant. Cloudflare's current [pricing examples](https://developers.cloudflare.com/durable-objects/platform/pricing/) put one regular WebSocket workload at about $143 per month and one hibernating workload at about $21 per month. Those examples use different traffic patterns, so they are not a direct price comparison, but they show why Cloudflare recommends hibernation for this kind of application.
 
-The biggest tradeoff is that one Durable Object is one coordination point.
+There is a consequence though.
 
-That is great when your problem naturally divides into rooms, documents, matches or sessions.
+When the object wakes up, its old in memory JavaScript state is gone. Anything important needs to live in storage or be recoverable from the WebSocket connection metadata.
 
-It is less useful if every user in your entire product needs to coordinate through one shared object.
+That changes how I would design the room from the start.
 
-A single object is also single threaded. Cloudflare currently documents a soft limit of roughly [1,000 requests per second](https://developers.cloudflare.com/durable-objects/platform/limits/) per object, depending heavily on what the object does.
+## There is still a network
 
-So this:
+Durable Objects also introduce a latency tradeoff that is easy to miss.
+
+An object runs in one location. By default, Cloudflare creates it near the request that first caused it to exist, and it [does not currently move](https://developers.cloudflare.com/durable-objects/reference/data-location/) that object later.
+
+So if Alice creates a room from Birmingham and Charlie later joins from Sydney, Charlie's messages still need to reach the location hosting that room.
+
+Cloudflare's network handles the routing, but physics has not gone anywhere.
+
+For a board, chat or planning tool that may be completely acceptable. For something where every millisecond matters, location becomes part of the design. Cloudflare also supports location hints when you have a better idea of where an object's users are likely to be.
+
+## You are trading infrastructure for constraints
+
+Durable Objects do not remove complexity for free.
+
+One object gives you one coordination point. That works very well when your application naturally divides into rooms, documents, matches, sessions or projects.
 
 ```text
 one object per document
 ```
 
-can scale very well.
-
-This:
+Good fit.
 
 ```text
-one object for the whole application
+one object for the entire application
 ```
 
-probably will not.
+Probably not.
 
-You are also buying into Cloudflare's runtime and Durable Objects API. Redis, Kafka and WebSocket servers can move between many hosting providers. Durable Objects cannot.
+You are also choosing Cloudflare's runtime and APIs. A Redis based architecture can run in many places. Durable Objects cannot.
 
-That trade can still be worth making, but it should be deliberate.
+And Durable Objects are not a replacement for Kafka. If events need long term retention, replay, analytics pipelines or many independent backend consumers, a proper event system still solves a different problem.
 
-## When I would use this
+But collaborative UI often does not need all of that.
 
-I would seriously consider this architecture for collaborative documents, multiplayer tools, shared dashboards, live admin interfaces, chat rooms, presence systems and small group planning apps.
-
-Basically, anything where you can point at some ID and say:
+Sometimes the requirement really is just:
 
 **Everyone looking at this thing needs to agree on what is happening.**
 
-That gives you a natural Durable Object boundary.
-
-For systems where events need to survive for months, feed analytics pipelines, be replayed by many independent services or connect dozens of backend systems, I would still look toward Kafka or another durable event system.
-
-Durable Objects are not Kafka with a nicer API.
-
-They solve a different problem.
-
-For collaborative UI, though, that problem happens to be the one we often build quite a lot of infrastructure to solve.
-
-Sometimes you do not need a fleet of WebSocket servers talking through Redis.
-
-Sometimes you just need everyone in the room to actually be in the same room.
+Giving that thing one coordinator can remove a surprising amount of infrastructure.

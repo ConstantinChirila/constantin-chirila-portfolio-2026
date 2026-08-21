@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import { getAllPosts, getPost } from "@/app/lib/almanac";
 import { codeTheme } from "@/app/lib/code-theme";
+import { siteName, siteUrl } from "@/app/lib/site";
 import { FlowDiagram, RelayDiagram, StateCard } from "@/app/components/diagrams";
 
 // Tables need a scroll container so wide content never forces the page to
@@ -37,11 +38,26 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return { title: "Note not found" };
+  // The layout's title template appends "· Constantin Chirila"; post titles
+  // are long, so no "· Notes" infix (SERPs truncate around 60 characters).
   return {
-    title: `${post.title} · Notes`,
+    title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/almanac/${post.slug}` },
-    openGraph: { title: post.title, description: post.excerpt },
+    openGraph: {
+      type: "article",
+      url: `/almanac/${post.slug}`,
+      siteName,
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: post.published,
+      authors: [siteName],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
   };
 }
 
@@ -76,11 +92,26 @@ export default async function AlmanacPostPage({
     },
   });
 
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.published,
+    url: `${siteUrl}/almanac/${post.slug}`,
+    mainEntityOfPage: `${siteUrl}/almanac/${post.slug}`,
+    author: { "@type": "Person", name: siteName, url: siteUrl },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
       <section className="page-hero article-hero">
         <span className="eyebrow">
-          {post.date}
+          <time dateTime={post.published}>{post.date}</time>
           {post.draft ? " · Draft" : ""}
         </span>
         <h1>{post.title}</h1>

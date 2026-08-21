@@ -6,12 +6,30 @@ import {
   experience,
   skillGroups,
 } from "@/app/data/cv";
+import { siteName } from "@/app/lib/site";
 
+const pageTitle = "Curriculum Vitae · Constantin Chirila";
+const pageDescription =
+  "The full record: a decade-plus of experience, education, and the tools Constantin Chirila works with.";
+
+// openGraph/twitter are set per page because Next replaces (not merges) these
+// objects, so pages without them inherit the home page's values wholesale.
 export const metadata: Metadata = {
   title: "Curriculum Vitae",
-  description:
-    "The full record: a decade-plus of experience, education, and the tools Constantin Chirila works with.",
+  description: pageDescription,
   alternates: { canonical: "/cv" },
+  openGraph: {
+    type: "website",
+    url: "/cv",
+    siteName,
+    title: pageTitle,
+    description: pageDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: pageTitle,
+    description: pageDescription,
+  },
 };
 
 export default function CvPage() {

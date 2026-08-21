@@ -20,6 +20,9 @@ export interface PostMeta {
   date: string;
   /** Sortable ISO-ish key, e.g. "2026-06". */
   sort: string;
+  /** Full ISO publish date, e.g. "2026-06-14". Used for JSON-LD, OG article
+   *  tags, the RSS feed, sitemap lastModified, and <time> elements. */
+  published: string;
   category: string;
   excerpt: string;
   /** Estimated reading time, e.g. "5 min read" (~200 wpm). */
@@ -43,6 +46,7 @@ function readSlug(slug: string): Post | undefined {
     title: String(data.title ?? slug),
     date: String(data.date ?? ""),
     sort: String(data.sort ?? data.date ?? ""),
+    published: String(data.published ?? `${data.sort ?? ""}-01`),
     category: String(data.category ?? ""),
     excerpt: String(data.excerpt ?? ""),
     readTime: `${Math.max(1, Math.round(words / 200))} min read`,

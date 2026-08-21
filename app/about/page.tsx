@@ -2,12 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { values } from "@/app/data/content";
+import { siteName } from "@/app/lib/site";
 
+const pageTitle = "About · Constantin Chirila";
+const pageDescription =
+  "Constantin Chirila is a Romanian-born British frontend engineer with a designer's background, building interfaces for the web in React and TypeScript, and the backend when a project needs it.";
+
+// openGraph/twitter are set per page because Next replaces (not merges) these
+// objects, so pages without them inherit the home page's values wholesale.
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "Constantin Chirila is a Romanian-born British frontend engineer with a designer's background, building interfaces for the web in React and TypeScript, and the backend when a project needs it.",
+  description: pageDescription,
   alternates: { canonical: "/about" },
+  openGraph: {
+    type: "website",
+    url: "/about",
+    siteName,
+    title: pageTitle,
+    description: pageDescription,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: pageTitle,
+    description: pageDescription,
+  },
 };
 
 export default function AboutPage() {
