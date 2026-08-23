@@ -1744,7 +1744,7 @@ a.writing-card:hover {
 .article-prose p,
 .article-prose li {
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.75;
 }
 
@@ -1806,7 +1806,7 @@ a.writing-card:hover {
   color: var(--bone-on-dark);
   padding: 20px;
   overflow-x: auto;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
