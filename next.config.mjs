@@ -3,7 +3,8 @@
 // Next's dev server (Turbopack HMR + React dev) relies on eval(); production
 // never does. Only relax script-src with 'unsafe-eval' in development.
 const isDev = process.env.NODE_ENV !== "production";
-const scriptSrc = `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`;
+// Cloudflare Web Analytics (manual embed): beacon script + its reporting endpoint.
+const scriptSrc = `script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com${isDev ? " 'unsafe-eval'" : ""}`;
 
 // Defense-in-depth response headers. Kept pragmatic for a content site: the CSP
 // locks framing (clickjacking) and object/base sinks while allowing the inline
@@ -29,7 +30,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       scriptSrc,
       "font-src 'self' data:",
-      "connect-src 'self'",
+      "connect-src 'self' https://cloudflareinsights.com",
       "form-action 'self'",
       "base-uri 'self'",
       "object-src 'none'",

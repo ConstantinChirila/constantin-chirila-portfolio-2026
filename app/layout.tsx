@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { fontVariables } from "./fonts";
 import { siteUrl, siteName, siteTitle, siteDescription } from "./lib/site";
 import { social } from "./data/content";
@@ -92,6 +93,15 @@ export default function RootLayout({
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        {/* Cloudflare Web Analytics. Production only so local dev doesn't
+            pollute the stats. */}
+        {process.env.NODE_ENV === "production" && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon='{"token": "06672a106fbd467b9a357f14aba42a5d"}'
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
