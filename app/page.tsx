@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ComingSoon from "./components/ComingSoon";
 import EmailLink from "./components/EmailLink";
-import { getAllPosts } from "./lib/almanac";
+import { getAllPosts } from "./lib/notes";
 import { Lattice, Nested, Rosette, Spiral, Waves } from "./components/plates";
 import { ORANGE } from "./lib/palette";
 import {
@@ -190,7 +190,7 @@ export default function Home() {
       <section className="section-light writing" id="writing">
         <div className="section-head">
           <h2>Notes.</h2>
-          <Link href="/almanac" className="btn btn-bone-outline">
+          <Link href="/notes" className="btn btn-bone-outline">
             All notes
           </Link>
         </div>
@@ -203,7 +203,7 @@ export default function Home() {
           )}
           {posts.map((p, i) => (
             <Link
-              href={`/almanac/${p.slug}`}
+              href={`/notes/${p.slug}`}
               className="writing-card"
               key={p.slug}
             >

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { compileMDX } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
-import { getAllPosts, getPost } from "@/app/lib/almanac";
+import { getAllPosts, getPost } from "@/app/lib/notes";
 import { codeTheme } from "@/app/lib/code-theme";
 import { siteName, siteUrl } from "@/app/lib/site";
 import { FlowDiagram, RelayDiagram, StateCard } from "@/app/components/diagrams";
@@ -43,10 +43,10 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/almanac/${post.slug}` },
+    alternates: { canonical: `/notes/${post.slug}` },
     openGraph: {
       type: "article",
-      url: `/almanac/${post.slug}`,
+      url: `/notes/${post.slug}`,
       siteName,
       title: post.title,
       description: post.excerpt,
@@ -98,8 +98,8 @@ export default async function AlmanacPostPage({
     headline: post.title,
     description: post.excerpt,
     datePublished: post.published,
-    url: `${siteUrl}/almanac/${post.slug}`,
-    mainEntityOfPage: `${siteUrl}/almanac/${post.slug}`,
+    url: `${siteUrl}/notes/${post.slug}`,
+    mainEntityOfPage: `${siteUrl}/notes/${post.slug}`,
     author: { "@type": "Person", name: siteName, url: siteUrl },
   };
 
@@ -122,7 +122,7 @@ export default async function AlmanacPostPage({
 
       <section className="page-body">
         <div className="article-wrap">
-          <Link href="/almanac" className="article-back">
+          <Link href="/notes" className="article-back">
             ← All notes
           </Link>
           <article className="article-prose">{content}</article>

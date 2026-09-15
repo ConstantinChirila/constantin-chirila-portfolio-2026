@@ -47,6 +47,19 @@ const nextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // The notes section lived at /almanac before 2026-09; the old URLs are
+  // indexed and linked, so keep them permanently redirecting (covers the
+  // listing, posts, and images under /almanac/<slug>/...).
+  async redirects() {
+    return [
+      { source: "/almanac", destination: "/notes", permanent: true },
+      {
+        source: "/almanac/:path*",
+        destination: "/notes/:path*",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

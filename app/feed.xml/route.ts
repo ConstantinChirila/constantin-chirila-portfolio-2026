@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/app/lib/almanac";
+import { getAllPosts } from "@/app/lib/notes";
 import { siteUrl, siteName } from "@/app/lib/site";
 
 // The feed is generated once at build time, like the rest of the site.
@@ -16,7 +16,7 @@ export function GET() {
 
   const items = posts
     .map((p) => {
-      const url = `${siteUrl}/almanac/${p.slug}`;
+      const url = `${siteUrl}/notes/${p.slug}`;
       return `    <item>
       <title>${escapeXml(p.title)}</title>
       <link>${url}</link>
@@ -31,7 +31,7 @@ export function GET() {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Notes · ${escapeXml(siteName)}</title>
-    <link>${siteUrl}/almanac</link>
+    <link>${siteUrl}/notes</link>
     <atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml"/>
     <description>Notes on frontend engineering, design systems, and performance by ${escapeXml(siteName)}.</description>
     <language>en</language>

@@ -3,7 +3,7 @@ export const nav = {
   brandLast: "Chirila",
   links: [
     { label: "Work", href: "/#work" },
-    { label: "Notes", href: "/almanac" },
+    { label: "Notes", href: "/notes" },
     { label: "About", href: "/about" },
   ],
   cvCta: { label: "CV", href: "/cv" },

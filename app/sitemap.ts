@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "./lib/site";
-import { getAllPosts } from "./lib/almanac";
+import { getAllPosts } from "./lib/notes";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  // getAllPosts excludes drafts (see includeDrafts in app/lib/almanac.ts).
+  // getAllPosts excludes drafts (see includeDrafts in app/lib/notes.ts).
   const posts = getAllPosts();
   const newestPost = posts[0]?.published;
 
@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${siteUrl}/about`, changeFrequency: "yearly", priority: 0.8 },
     { url: `${siteUrl}/cv`, changeFrequency: "monthly", priority: 0.8 },
     {
-      url: `${siteUrl}/almanac`,
+      url: `${siteUrl}/notes`,
       changeFrequency: "weekly",
       priority: 0.6,
       ...(newestPost && { lastModified: newestPost }),
@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const postRoutes: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${siteUrl}/almanac/${p.slug}`,
+    url: `${siteUrl}/notes/${p.slug}`,
     lastModified: p.published,
     changeFrequency: "monthly",
     priority: 0.5,

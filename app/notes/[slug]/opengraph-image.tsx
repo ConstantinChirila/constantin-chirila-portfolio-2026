@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getAllPosts, getPost } from "@/app/lib/almanac";
+import { getAllPosts, getPost } from "@/app/lib/notes";
 import { OG_SIZE, OG_CONTENT_TYPE, renderOgImage } from "@/app/lib/og";
 
 export const alt = "Notes · Constantin Chirila";

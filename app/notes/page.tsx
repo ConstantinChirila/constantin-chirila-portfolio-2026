@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ComingSoon from "@/app/components/ComingSoon";
-import { getAllPosts } from "@/app/lib/almanac";
+import { getAllPosts } from "@/app/lib/notes";
 import { siteName } from "@/app/lib/site";
 
 const pageTitle = "Notes · Constantin Chirila";
@@ -13,10 +13,10 @@ const pageDescription =
 export const metadata: Metadata = {
   title: "Notes",
   description: pageDescription,
-  alternates: { canonical: "/almanac" },
+  alternates: { canonical: "/notes" },
   openGraph: {
     type: "website",
-    url: "/almanac",
+    url: "/notes",
     siteName,
     title: pageTitle,
     description: pageDescription,
@@ -46,7 +46,7 @@ export default function AlmanacPage() {
         {posts.length > 0 ? (
           <div className="notes-list">
             {posts.map((p, i) => (
-              <Link className="entry" href={`/almanac/${p.slug}`} key={p.slug}>
+              <Link className="entry" href={`/notes/${p.slug}`} key={p.slug}>
                 <span className="no">{String(i + 1).padStart(2, "0")}</span>
                 <span className="main">
                   <span className="title">{p.title}</span>

@@ -2,13 +2,13 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 
-const ALMANAC_DIR = path.join(process.cwd(), "content", "almanac");
+const ALMANAC_DIR = path.join(process.cwd(), "content", "notes");
 
 // Slugs map to filenames, so restrict them to a safe charset. This blocks path
 // traversal (e.g. "../../etc/passwd") before any value reaches the filesystem.
 const SLUG_RE = /^[a-z0-9-]+$/;
 
-// Drafts are excluded everywhere for now, so /almanac shows its coming-soon
+// Drafts are excluded everywhere for now, so /notes shows its coming-soon
 // state until a post is published (draft: false). Flip to
 // `process.env.NODE_ENV !== "production"` to preview drafts in development.
 const includeDrafts = false;
