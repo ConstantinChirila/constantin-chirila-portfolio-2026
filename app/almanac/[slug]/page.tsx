@@ -110,11 +110,14 @@ export default async function AlmanacPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
       <section className="page-hero article-hero">
-        <span className="eyebrow">
-          <time dateTime={post.published}>{post.date}</time>
-          {post.draft ? " · Draft" : ""}
-        </span>
-        <h1>{post.title}</h1>
+        <div className="article-masthead">
+          <span className="eyebrow">
+            <time dateTime={post.published}>{post.date}</time>
+            {` · ${post.category} · ${post.readTime}`}
+            {post.draft ? " · Draft" : ""}
+          </span>
+          <h1>{post.title}</h1>
+        </div>
       </section>
 
       <section className="page-body">

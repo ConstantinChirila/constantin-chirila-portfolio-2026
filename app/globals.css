@@ -1721,16 +1721,35 @@ a.writing-card:hover {
   border-bottom-color: var(--ink);
 }
 
-/* Post pages centre the hero; other page heroes stay left-aligned. */
+/* Post pages flip the hero to the ink plate: dark surface, bone type,
+   orange details. Other page heroes keep the bone poster layout. */
 .article-hero {
-  text-align: center;
+  background: var(--ink);
+  color: var(--bone-on-dark);
+  border-bottom: 1px solid var(--orange);
+}
+
+/* Same 920px column as .article-wrap so the title lines up with the prose. */
+.article-masthead {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.article-hero::before {
+  opacity: 0.12;
+  background-image:
+    linear-gradient(to right, var(--orange) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--orange) 1px, transparent 1px);
+}
+
+.article-hero .eyebrow {
+  color: var(--orange);
 }
 
 .article-hero h1 {
-  max-width: 1980px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1;
+  font-size: clamp(38px, 5.2vw, 80px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
 }
 
 .article-wrap {
