@@ -1730,6 +1730,7 @@ a.writing-card:hover {
   max-width: 1980px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1;
 }
 
 .article-wrap {
@@ -1853,6 +1854,14 @@ a.writing-card:hover {
 
 .article-prose pre {
   margin: 0 0 20px;
+}
+
+.article-prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 30px auto 34px;
+  border: 1px solid var(--hair-60);
 }
 
 /* rehype-pretty-code wraps highlighted blocks in a figure. */
