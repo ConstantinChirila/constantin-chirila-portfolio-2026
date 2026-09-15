@@ -10,83 +10,137 @@ draft: false
 
 For most of my career, I have built websites for humans. Humans can be annoying users, but at least I understand them. They miss buttons, ignore error messages, click the logo to go home, and press Submit three times if nothing happens within half a second.
 
-A few days ago I was listening to [Syntax episode 1037, *WebMCP is here (and you should care)*](https://syntax.fm/show/1037/webmcp-is-here-and-you-should-care), where Wes Bos and Scott Tolinski talked to Sarah Drasner and Dominic Farolino from the Chrome team. I had heard the name WebMCP before, but this was the first time I understood what it might actually change.
+A few days ago I was listening to [Syntax episode 1037, *WebMCP is here (and you should care)*](https://syntax.fm/show/1037/webmcp-is-here-and-you-should-care), where Wes Bos and Scott Tolinski talked to Sarah Drasner and Dominic Farolino from the Chrome team.
 
-One thought stuck with me afterwards: we now have another kind of website user. The AI agent.
+I had heard the name WebMCP before, but I had not paid much attention to it. Listening to them talk about it made me think about something I had mostly ignored until now: websites are starting to get a new kind of user.
 
-It does not care about your typography, your border radius, or the hover animation you spent an afternoon tuning. Given the choice, it might prefer not to use your interface at all. So what does a website look like when some of its users are not human?
+The AI agent.
+
+Not another person using an AI assistant alongside the website. Software actually trying to use the website on that person's behalf.
+
+That changes a few assumptions I have had about frontend development for a long time.
 
 ![A human reaches product capabilities through the UI, while an AI agent can talk to those capabilities directly.](/almanac/your-website-has-a-new-user-the-ai-agent/human-agent-capabilities.webp)
 
-## The slightly ridiculous way agents use the web today
+## The awkward way agents use the web today
 
-Imagine telling an agent: "Find me a hotel in Edinburgh next Friday for under £180, with parking, and book it."
+Imagine telling an agent:
 
-The agent can open a hotel site, find the date picker, enter dates, read the results, set filters, choose a room and eventually find the booking button. It is impressive that this works at all. It is also a little ridiculous.
+> Find me a hotel in Edinburgh next Friday for under £180, with parking, and book it.
 
-Behind that date picker is probably logic that accepts two dates. Behind Book Now is an action that creates a reservation. The agent does not need either visual element. It needs to know what the site can do, what input each action needs, and whether it has permission to do it.
+Today, an agent might open a hotel site, find the date picker, enter the dates, wait for the results, set a few filters, inspect the rooms and eventually find the booking button.
 
-Right now we often make agents reverse engineer that from the interface.
+The fact that this works at all is impressive.
 
-## WebMCP changes that relationship
+But from a software point of view, it is a strange route to take.
 
-This is what made [WebMCP](https://developer.chrome.com/docs/ai/agents) click for me. It is still experimental, so I would not rebuild a production app around it tomorrow. But the idea is simple: a website can explicitly expose structured tools that an AI agent can understand and call.
+Behind the date picker there is probably some logic that accepts a check in date and a check out date. Somewhere behind the booking button there is an action that takes a room, some customer details and a payment method and creates a reservation.
 
-Instead of guessing which button reserves a room, the agent could see something closer to:
+The agent does not really care about the date picker or the button. Those exist because humans need an interface.
+
+What the agent needs is much closer to this:
 
 ```text
-searchHotels()
-getRoomAvailability()
-reserveRoom()
-cancelReservation()
+searchHotels(...)
+getRoomAvailability(...)
+reserveRoom(...)
+cancelReservation(...)
 ```
 
-The site describes what each tool does and what input it needs. Chrome's current API lets sites register these tools with JavaScript, and there is also work on making normal HTML forms available as tools.
+It needs to know what the website can do, which inputs those actions require, and whether it is allowed to call them.
 
-For a human, the route is roughly `Human → UI → Product capabilities`. For an agent, it can become `Agent → Product capabilities`.
+At the moment, we often make agents work that out by looking at the same interface we designed for people.
 
-The UI still matters. Humans are not going anywhere. But it is no longer necessarily the only doorway into the product.
+## WebMCP gives the browser another option
 
-## Semantic HTML suddenly gets another job
+This is where [WebMCP](https://developer.chrome.com/docs/ai/agents) got interesting to me.
 
-There is a nice irony here. Frontend developers have been told for years to use real buttons, label inputs properly, use headings correctly and stop turning `<div>` elements into buttons.
+It is still experimental, so I would not design a production system around it yet. But the basic idea is quite straightforward: a website can expose structured tools that an AI agent can discover and call.
 
-Accessibility remains the important reason to do this. But agents give semantic HTML another useful property: machines have a better chance of understanding what we built.
+Instead of an agent inspecting the page and deciding that a particular blue rectangle probably means "book this room", the site can explicitly tell it that a booking action exists and describe the data that action needs.
+
+Chrome's current API lets sites register tools with JavaScript, and there is also work around exposing normal HTML forms as tools.
+
+For a human, interaction still runs through the UI to reach a product capability. For an agent, it could increasingly go straight to the capability itself.
+
+That does not make the UI less important. People still need to browse products, compare options, understand what is happening and decide what they want.
+
+It just means the UI may no longer be the only way into the product.
+
+## Semantic HTML becomes useful in another way
+
+Frontend developers have been told for years to use real buttons, label inputs properly, use headings correctly and stop turning `<div>` elements into buttons.
+
+Accessibility is still the main reason to do that.
+
+But the same work also makes a page easier for software to understand.
 
 ![Clear semantic HTML gives software useful meaning. A pile of nested divs gives it much less to work with.](/almanac/your-website-has-a-new-user-the-ai-agent/semantic-html-vs-div-soup.webp)
 
-A button called "Add to basket" carries useful meaning. A clickable `<div>` containing three nested spans, an SVG and seventeen generated CSS classes carries considerably less.
+A button containing the text "Add to basket" has quite a lot of meaning attached to it. A clickable `<div>` containing several nested spans, an SVG and a collection of generated CSS classes has much less.
 
-## This changes how I think about frontend architecture
+WebMCP goes further by letting the site describe actions directly, but it feels like part of the same general direction. The more meaning we put into the things we build, the less another system has to guess.
 
-A human shopping for boots might choose waterproof, size 10, under £120, then sort by delivery date. An agent gets: "Find me waterproof walking boots, size 10, under £120, that can arrive by Friday."
+## It also changes how I think about frontend architecture
 
-Same goal. Different interface.
+Take a shopping site.
 
-It makes the separation between **what a product can do** and **how the current UI lets someone do it** more important. We already know business logic should not live inside random React components. Agents just give us another reason to care.
+A person might open the filters and choose waterproof, size 10, under £120, then sort the results by delivery date.
 
-If `addToBasket()` only makes sense when called from `ProductCard.tsx`, exposing it to anything else is going to be unpleasant.
+An agent might receive:
 
-## Then things get scary
+> Find me waterproof walking boots, size 10, under £120, that can arrive by Friday.
 
-Reading hotel prices is harmless. Booking a £1,200 hotel is not.
+The goal is the same. The route through the product is not.
 
-Once an agent can act, we need to think about permission, intent, confirmation and undo. Did the user ask for this? Does it need approval? Can we reverse it?
+This makes the boundary between what the product can do and how the current interface happens to expose it more important.
 
-[WebMCP's security guidance](https://developer.chrome.com/docs/ai/webmcp/secure-tools) already covers some of this. Tools can flag read only or consequential actions, and the guidance warns about indirect prompt injection, where hostile content tries to influence what an agent does.
+We already know that business logic should not live inside random React components. In practice, though, it is very easy for product behaviour to slowly become tied to the UI that happens to trigger it.
+
+If `addToBasket()` only really works when it gets called from `ProductCard.tsx`, that is already a design problem. Having another type of client trying to call the same behaviour just makes the problem harder to ignore.
+
+I can imagine this affecting how I structure frontend applications even if I never touch WebMCP itself.
+
+The UI becomes one consumer of the product's capabilities rather than the place where those capabilities live.
+
+## Actions are where this gets complicated
+
+Reading hotel prices is one thing. Booking a £1,200 hotel is another.
+
+As soon as agents can do more than read information, the difficult part stops being how they find the right button.
+
+Now we have to think about what they are allowed to do.
+
+Did the user actually ask for the action? Should the agent be able to complete it without confirmation? Which actions need extra approval? What happens if the agent chooses the wrong thing? Can the action be reversed?
+
+[WebMCP's security guidance](https://developer.chrome.com/docs/ai/webmcp/secure-tools) already deals with some of this. Tools can describe whether an action is read only or consequential, and the guidance also covers indirect prompt injection, where content on a page tries to influence an agent into doing something the user never asked for.
 
 ![Agents can do more, but consequential actions need clear approval and a reliable way back.](/almanac/your-website-has-a-new-user-the-ai-agent/read-act-confirm-undo.webp)
 
-I suspect undo will become especially important. If software does more on our behalf, I would rather have a clear history and a reliable way to reverse an action than click through twelve "Are you sure?" dialogs.
+I think undo becomes especially useful here.
 
-## I don't think we need to rebuild the web
+If software is going to do more things on my behalf, I would much rather have a clear history of those actions and a reliable way to reverse them than approve every tiny step before it happens.
 
-I do not think every company needs an Agent Experience team by next Tuesday. WebMCP is experimental and will change. Maybe it becomes the standard. Maybe something else wins.
+That part of the experience feels just as important as exposing the actions in the first place.
 
-The more interesting change is who might use the things we build. Some users will interact with products through software acting on their behalf rather than through a pair of eyes looking at our interface.
+## We probably do not need a new web
 
-The sensible response is probably boring: use semantic HTML, keep business logic separate from UI code, expose clear product capabilities, and think carefully about which actions can change data.
+I do not think every company suddenly needs an "Agent Experience" team.
 
-For years, frontend developers have asked whether a person can understand how to use a website. We might soon need to ask another question too: **can something that has never seen the website understand what it is capable of doing?**
+WebMCP is experimental. The API will probably change. It might become widely used, or another approach might end up solving the same problem.
 
-I find that a much more interesting frontend problem than making another button prettier.
+But I think the underlying shift is worth paying attention to regardless of what happens to WebMCP.
+
+Some people will increasingly interact with products through software acting on their behalf rather than by manually clicking through every part of the interface.
+
+A lot of the things that make a site easier for agents are things we should probably be doing anyway: semantic HTML, clear boundaries between UI and business logic, well defined product actions, and careful handling of anything that changes data or spends money.
+
+For most of my career, the frontend question has been:
+
+**Can a person understand how to use this?**
+
+We may increasingly have to ask:
+
+**Can software understand what this product is capable of doing?**
+
+I think that is a far more interesting frontend problem than finding another way to style a button.
