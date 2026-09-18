@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ComingSoon from "./components/ComingSoon";
 import EmailLink from "./components/EmailLink";
+import LabTags from "./components/LabTags";
+import { getLabItems } from "./lib/lab";
 import { getAllPosts } from "./lib/notes";
 import { Lattice, Nested, Rosette, Spiral, Waves } from "./components/plates";
 import { ORANGE } from "./lib/palette";
@@ -30,6 +32,7 @@ const disciplinePlates: Record<DisciplinePlate, React.ReactNode> = {
 
 export default function Home() {
   const posts = getAllPosts().slice(0, 3);
+  const labItems = getLabItems().slice(0, 3);
 
   return (
     <>
@@ -184,6 +187,31 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* ---- Lab (signal) ---- */}
+      {/* The only full-bleed orange surface on the site. It also keeps the
+          ink/bone alternation intact: a bone band here would run straight into
+          the bone writing section below. */}
+      <section className="lab-band" id="lab">
+        <div className="section-head">
+          <h2>Lab.</h2>
+          <Link href="/lab" className="btn btn-signal-outline">
+            All of the lab
+          </Link>
+        </div>
+        {labItems.map((item, i) => (
+          <Link className="lab-band-row" href={`/lab#${item.id}`} key={item.id}>
+            <span className="no" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span className="main">
+              <span className="title">{item.name}</span>
+              <span className="lede">{item.lede}</span>
+            </span>
+            <LabTags item={item} />
+          </Link>
+        ))}
       </section>
 
       {/* ---- Latest writing (bone) ---- */}

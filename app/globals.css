@@ -42,6 +42,8 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* Clears the sticky header, so an #anchor target does not land under it. */
+  scroll-padding-top: 80px;
 }
 
 /* No font-smoothing override: the design's type weights are calibrated to
@@ -85,6 +87,13 @@ svg {
   outline-offset: 2px;
 }
 
+/* The signal surfaces are the same orange as the focus ring, which would make
+   the ring invisible exactly where the home band's links live. */
+.lab-band :focus-visible,
+.page-hero.is-signal :focus-visible {
+  outline-color: var(--ink);
+}
+
 .skip-link {
   position: absolute;
   top: -48px;
@@ -126,7 +135,9 @@ svg {
    their 1px border keeps them the same outer height as the solid buttons.
    A deliberate deviation from the handoff's spacing. */
 
-/* On the orange hero: solid ink / outlined ink */
+/* Surface pairings. The hero was orange in the original handoff and is bone
+   now, so these two are the bone-hero pair; .lab-band is the site's only
+   full-bleed orange surface and takes .btn-signal-outline below. */
 .btn-ink {
   background: var(--ink);
   color: var(--orange);
@@ -184,6 +195,21 @@ svg {
 .btn-bone-outline:hover {
   background: var(--ink);
   color: var(--bone);
+}
+
+/* On the signal (orange) surface: outlined ink inverting to ink/orange, the
+   same treatment a.lab-band-row gets, so the band reads as one piece. */
+.btn-signal-outline {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 11px 18px 10px;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.btn-signal-outline:hover {
+  background: var(--ink);
+  color: var(--orange);
 }
 
 /* ============================================================
@@ -1708,6 +1734,283 @@ a.writing-card:hover {
   line-height: 1.6;
 }
 
+/* ============================================================
+   Lab (tools, apps & experiments)
+   ============================================================ */
+
+/* The lab is the only page whose hero takes the signal surface. Inserting a
+   third surface also keeps the home page's ink/bone alternation intact when
+   the lab band sits between two sections. */
+.page-hero.is-signal {
+  background: var(--orange);
+  color: var(--ink);
+}
+
+/* Lighter than the bone heroes' 0.16: ink rules on orange carry far more
+   contrast, and the mono caption sits right on top of them. */
+.page-hero.is-signal::before {
+  opacity: 0.13;
+}
+
+/* Rows are articles, not links: each carries its own outbound links, and
+   nesting anchors inside a row-wide anchor is invalid. */
+/* Numeral · figure · prose · chips · spacer. The text track is capped rather
+   than 1fr, and the trailing spacer absorbs the slack, so the chips sit one
+   gap right of the prose instead of being stranded at the page edge while the
+   row hairline still runs edge to edge. */
+.lab-row {
+  display: grid;
+  grid-template-columns: 52px 340px minmax(0, 620px) auto minmax(0, 1fr);
+  gap: 20px 28px;
+  align-items: start;
+  padding: 30px 8px 34px;
+  border-bottom: 1px solid var(--hair-ink-25);
+}
+
+/* Arriving from the home band's /lab#<id> link, so the row says "you are
+   here". The only interaction state on a row, which is not a link. */
+.lab-row:target {
+  box-shadow: inset 3px 0 0 var(--orange);
+}
+
+.lab-list .lab-row:first-child {
+  border-top: 1px solid var(--ink);
+}
+
+.lab-row .no {
+  font-family: var(--mono);
+  font-size: 12px;
+  opacity: 0.65;
+  padding-top: 7px;
+}
+
+/* Measure is set by the grid track, not here. */
+.lab-row .main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lab-row .title {
+  font-size: 32px;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+/* Standfirst, not a first paragraph: bigger and on a shorter measure than the
+   blurb, so 1px of type size is not carrying the hierarchy on its own. */
+.lab-row .lede {
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.lab-row .blurb {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  opacity: 0.7;
+}
+
+.lab-row .note {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+  opacity: 0.8;
+}
+
+.lab-row .note::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 8px;
+  height: 1px;
+  background: var(--orange);
+}
+
+/* The figure is the row's identifier, first thing on the reading stem. Frame
+   and caption bar wrap image and label together, the .about-portrait pattern.
+   Coherence across wildly unlike plates (a pastel sticker sheet, a dark 3D
+   render, generated line-art) comes from the mount, never the content: same
+   hairline, same ratio, same caption strip. The museum-specimen device. */
+.lab-art {
+  border: 1px solid var(--ink);
+  align-self: start;
+}
+
+.lab-art .frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--peach);
+}
+
+.lab-art .frame img {
+  object-fit: cover;
+}
+
+/* Generated plates draw in ink on bone; artwork fills the frame edge to edge. */
+.lab-art .frame .plate-art {
+  padding: 14px;
+}
+
+.lab-art .cap {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-top: 1px solid var(--ink);
+  padding: 10px 12px 9px;
+}
+
+/* Base layout belongs to the component, not to whoever contains it: LabTags
+   renders on the lab page and in the home band, so scoping this to .lab-row
+   left the band's chips inline and touching above 780px. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Chips are the whole right-hand column here, which is what that gutter is for
+   everywhere else on the site (.work-row .type, .notes-list .meta). */
+.lab-row .tags {
+  justify-content: flex-end;
+  justify-self: start;
+  padding-top: 9px;
+}
+
+.lab-status,
+.lab-kind {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  padding: 4px 10px 3px;
+  white-space: nowrap;
+}
+
+/* Shipped things get the signal fill; unfinished ones a dashed outline, so
+   status reads without relying on colour alone. */
+.lab-status.is-live {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+
+.lab-status.is-wip {
+  border-style: dashed;
+}
+
+.lab-status.is-archived {
+  border-color: var(--hair-ink-25);
+  opacity: 0.65;
+}
+
+/* Title band: name plus its outbound links, wrapping to a second line on
+   narrow columns. */
+.lab-row .head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.lab-row .acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lab-row .acts .btn {
+  gap: 8px;
+}
+
+/* ---- Home page band (signal) ---- */
+
+.lab-band {
+  background: var(--orange);
+  color: var(--ink);
+  padding: 88px var(--pad-x) 96px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.lab-band .section-head {
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 26px;
+  margin-bottom: 4px;
+}
+
+.lab-band .section-head h2 {
+  font-size: clamp(34px, 4.2vw, 66px);
+}
+
+.lab-band-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: baseline;
+  padding: 22px 8px;
+  border-bottom: 1px solid var(--hair-ink-25);
+}
+
+.lab-band .lab-band-row:last-of-type {
+  border-bottom: 1px solid var(--ink);
+}
+
+a.lab-band-row:hover,
+a.lab-band-row:focus-visible {
+  background: var(--ink);
+  color: var(--orange);
+  padding-left: 18px;
+}
+
+.lab-band-row .no {
+  font-family: var(--mono);
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+.lab-band-row .main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lab-band-row .title {
+  font-size: 26px;
+  letter-spacing: -0.025em;
+}
+
+.lab-band-row .lede {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+/* Inverted rows drop the ink border for a bone hairline on the dark fill. */
+a.lab-band-row:hover .lab-status,
+a.lab-band-row:hover .lab-kind,
+a.lab-band-row:focus-visible .lab-status,
+a.lab-band-row:focus-visible .lab-kind {
+  border-color: currentColor;
+}
+
+a.lab-band-row:hover .lab-status.is-live,
+a.lab-band-row:focus-visible .lab-status.is-live {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--ink);
+}
+
 .article-back {
   font-family: var(--mono);
   font-size: 12px;
@@ -2113,7 +2416,32 @@ a.writing-card:hover {
   .disciplines .section-head .caption {
     white-space: normal;
   }
+
+  /* Three tracks stop fitting: a reserved chip column here starves the prose
+     to ~310px while the figure is only 260px tall. The chips move above the
+     prose in the same track instead, and the figure narrows. */
+  .lab-row {
+    grid-template-columns: 52px 240px minmax(0, 1fr);
+    gap: 14px 24px;
+  }
+
+  .lab-art {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .lab-row .tags {
+    grid-column: 3;
+    grid-row: 1;
+    padding-top: 4px;
+  }
+
+  .lab-row .main {
+    grid-column: 3;
+    grid-row: 2;
+  }
 }
+
 
 @media (max-width: 900px) {
   :root {
@@ -2313,6 +2641,77 @@ a.writing-card:hover {
   .cv-skills .tk-row {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  /* Single column: figure, then chips, then the prose. Explicit order because
+     the DOM runs numeral, figure, prose, chips. */
+  .lab-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 26px 8px 32px;
+  }
+
+  .lab-row .no {
+    display: none;
+  }
+
+  /* Auto placement again, ordered by hand, since the 1100px rules place these
+     into explicit tracks. */
+  .lab-art {
+    order: 1;
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .lab-row .tags {
+    order: 2;
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: start;
+    justify-content: flex-start;
+    padding-top: 0;
+  }
+
+  .lab-row .main {
+    order: 3;
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .lab-row .title {
+    font-size: 26px;
+  }
+
+  .lab-row .lede {
+    font-size: 14px;
+  }
+
+  .lab-band {
+    padding: 64px var(--pad-x) 72px;
+  }
+
+  .lab-band-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 18px;
+    align-items: start;
+  }
+
+  .lab-band-row .no {
+    display: none;
+  }
+
+  .lab-band-row .main {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .lab-band-row .tags {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  a.lab-band-row:hover {
+    padding-left: 8px;
   }
 
   .notes-list .entry {
