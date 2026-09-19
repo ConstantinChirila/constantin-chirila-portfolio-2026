@@ -1,0 +1,277 @@
+---
+title: "React state is easy. Agent state is weird."
+date: "2026 · 09"
+sort: "2026-09"
+published: "2026-09-19"
+category: "Engineering"
+excerpt: "Tools, approvals, handoffs and resumable runs break the loading/success/error model. What happens if you treat an agent run as a sequence of events instead of a status."
+draft: false
+---
+
+I was looking through the OpenAI Agents SDK recently and found a bit of API design that made my frontend brain slightly uncomfortable.
+
+A normal agent can start like this:
+
+```ts
+const result = await run(agent, "Refund order 123");
+
+console.log(result.finalOutput);
+```
+
+That looks reassuringly familiar. Input goes in, result comes out. I know this shape. I have built approximately seventeen thousand React components around this shape.
+
+Then you turn on streaming and start listening to what actually happens during the run.
+
+```ts
+const result = await run(agent, "Refund order 123", {
+  stream: true,
+});
+
+for await (const event of result) {
+  console.log(event.type);
+}
+```
+
+Now the run can produce tool calls, tool results, handoffs to other agents, output from the model and requests for human approval.
+
+Suddenly this:
+
+```ts
+type State = "loading" | "success" | "error";
+```
+
+feels a little optimistic.
+
+![A normal request moves from idle to loading to success or error. An agent run thinks, calls tools, delegates, pauses for approval and resumes.](/notes/agent-state-is-weird/request-vs-agent-run.webp)
+
+## The agent is loading. Great. What is it doing?
+
+OpenAI's SDK exposes events such as `tool_called`, `tool_output`, `handoff_occurred` and `tool_approval_requested`.
+
+That is already quite different from the usual request lifecycle.
+
+Imagine our refund agent first looks up an order, checks whether it is eligible, then actually issues the refund.
+
+The last part is slightly more serious than looking something up, so we can make that tool require approval:
+
+```ts
+const issueRefund = tool({
+  name: "issue_refund",
+  description: "Refund an order",
+  parameters: z.object({
+    orderId: z.string(),
+  }),
+  needsApproval: true,
+  execute: async ({ orderId }) => {
+    return refundOrder(orderId);
+  },
+});
+```
+
+When the agent reaches that tool, the SDK does not fail the run and it does not finish it either.
+
+It pauses.
+
+The result contains an `interruption` describing the action waiting for approval. The application can show that to the user, let them approve it, then continue the same run.
+
+```ts
+if (result.interruptions.length) {
+  result.state.approve(result.interruptions[0]);
+
+  const resumed = await run(agent, result.state);
+}
+```
+
+I quite like this API.
+
+I also immediately hate what it does to my nice React state.
+
+The agent has already successfully looked up the order. It may already have produced useful output. It is not currently doing any work. It has not succeeded. It has not failed. It is waiting for me.
+
+Calling that `loading` would be technically possible, but not especially helpful.
+
+## The weird part is that the state can go home before you do
+
+The approval does not even need to happen during the same request.
+
+The Agents SDK exposes `RunState` as a serializable snapshot. You can store it, shut down the process and restore it later.
+
+That means this is a perfectly reasonable lifecycle:
+
+```text
+09:31  Agent starts
+09:31  Order lookup completed
+09:31  Refund requested
+09:31  Waiting for approval
+17:42  User finally notices the notification
+17:43  Run resumes
+17:43  Refund completed
+```
+
+Nothing was actually running between 09:31 and 17:43.
+
+Try representing that with `isLoading`.
+
+![A run timeline with a long gap in the middle: the agent works in bursts, then its state sits in a database until the user approves.](/notes/agent-state-is-weird/run-pauses-and-waits.webp)
+
+This was the point where the problem clicked for me. Agent state is not just async state with more steps. A run has history.
+
+If the page reloads at 14:00, I still need to know that the lookup happened, that a refund was proposed and that the next thing the agent needs is a human decision.
+
+## Maybe `status` is the wrong abstraction
+
+My first instinct would probably be to expand the enum:
+
+```ts
+type AgentStatus =
+  | "idle"
+  | "thinking"
+  | "calling_tool"
+  | "waiting_for_approval"
+  | "retrying"
+  | "paused"
+  | "success"
+  | "error";
+```
+
+This works until the agent delegates something.
+
+The OpenAI SDK supports both handoffs and agents used as tools. One agent can therefore still be active while work has moved to another agent, and nested tools can raise their own approval requests.
+
+Now which status is the run in?
+
+You could keep adding enum values until TypeScript starts judging you, but I think there is a nicer model.
+
+The SDK already gives a clue. Its `newItems` result contains things such as messages, tool calls, tool outputs, approvals and handoffs.
+
+That starts to look less like:
+
+```ts
+{
+  status: "loading"
+}
+```
+
+and more like:
+
+```ts
+{
+  phase: "active",
+  events: [
+    { type: "tool_started", tool: "lookup_order" },
+    { type: "tool_finished", tool: "lookup_order" },
+    { type: "tool_started", tool: "check_refund_policy" },
+    { type: "tool_finished", tool: "check_refund_policy" },
+    { type: "approval_required", tool: "issue_refund" },
+  ]
+}
+```
+
+The top level status can still exist. I would probably keep one because sometimes the UI just needs to know whether to show a Stop button.
+
+But it stops being the source of truth.
+
+The interesting part is the execution history.
+
+## React actually likes this model
+
+There is a nice side effect here.
+
+Once you have events, most of the interface becomes derived state.
+
+```ts
+const pendingApproval = events.findLast(
+  event => event.type === "approval_required"
+);
+
+const completedTools = events.filter(
+  event => event.type === "tool_finished"
+);
+
+const isWorking =
+  events.at(-1)?.type !== "run_finished" &&
+  !pendingApproval;
+```
+
+I would probably use a reducer for the client side representation rather than sprinkle `setIsThinking(false)` and `setIsToolRunning(true)` around a streaming callback.
+
+That path has a very predictable ending. Usually around the point where a tool errors while another one is still running.
+
+The event stream also maps quite naturally onto the UI. Instead of one giant spinner, you can show something like:
+
+```text
+✓ Found order #123
+✓ Checked refund policy
+● Waiting for approval
+
+  Refund £42.00 to Constantin?
+  [Reject] [Approve]
+```
+
+There might still be a spinner somewhere. Frontend engineers have suffered too much for me to take that away from us completely.
+
+## There are actually two kinds of state
+
+One other detail in the SDK caught my attention.
+
+OpenAI has `Session`, which stores the conversation history across turns, and `RunState`, which stores enough execution state to resume an interrupted run.
+
+Those sound similar at first, but they solve different problems.
+
+A session answers something like:
+
+> What have the user and agent talked about?
+
+The run state answers:
+
+> What was this particular piece of work doing when it stopped?
+
+That distinction feels useful outside OpenAI's SDK too.
+
+If I ask an agent tomorrow, "What happened with that refund?", that is conversation state.
+
+Whether the refund tool already ran, is waiting for approval, or can safely be retried is execution state.
+
+I would not want those to become the same blob in my database.
+
+## `error` gets weird as well
+
+Approvals are probably the clean example.
+
+Failures get messier.
+
+Suppose the agent calls `issueRefund()`. The payment provider completes the refund but your request times out before you receive the response.
+
+What state are we in?
+
+```ts
+status: "error"
+```
+
+Maybe.
+
+But pressing Retry could now refund the customer twice.
+
+At that point the UI needs more information than whether the previous operation threw an exception. It needs to know which steps can safely run again, which actions definitely happened and which have an uncertain result.
+
+That problem is not unique to AI agents. Distributed systems have been making people's afternoons worse with it for a long time.
+
+Agents just drag more of it into product UI because they string several operations together and expose that workflow directly to the user.
+
+## So what does the React state look like?
+
+I do not think there is one correct model yet.
+
+I do not think this kind of API is enough once an agent does more than send a prompt and return an answer:
+
+```ts
+const { data, isLoading, error } = useAgent();
+```
+
+For a simple prompt in, answer out feature, that shape is fine. But once the agent can pause, call tools, retry, hand work off, or resume later, I think the run itself becomes the state: a sequence of things that happened, with the UI derived from that.
+
+Which is slightly funny because after years of trying to make frontend state simpler, AI has apparently found a way to give us tiny workflow engines.
+
+It is impressive that this works at all.
+
+It is also a little ridiculous.
